@@ -65,6 +65,18 @@ products often will) is convergence, not copying; the caution is only against ad
 **And a value that never overrules a convenient decision is decoration.** The doctrine tracks
 where each star *forced* an outcome; if you can't name one, it isn't a value, it's a slogan.
 
+## Working in this repo
+
+**Any change to a document here must be committed.** Doctrine that exists only in a working
+tree is not doctrine — it cannot be relied on, cited, or read by anyone else.
+
+**Use a branch** for any edit that is not effectively atomic — i.e. any change that will not be
+written and committed in one uninterrupted step. Multi-file edits, reorganisations, and anything
+left mid-thought belong on a branch, not on `main`.
+
+**No releases and no version numbers.** These documents are always current by definition; there
+is no such thing as an old version to support. Git is the history.
+
 ## The load-bearing rule
 
 > **A guarantee you have not attacked is not a guarantee. It is a claim.**

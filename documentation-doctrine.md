@@ -15,13 +15,13 @@ current?" is answerable by where a file lives — not by reading it and inferrin
 `_working/` is a subdirectory of `docs/`, and it **mirrors `docs/`'s subdirectory structure**:
 
 ```
-docs/
-  specs/                  ← sealed
+docs/                     ← sealed (except for '_working')
+  specs/
   plans/
   reference/
   research/
-  _working/
-    specs/                ← drafts
+  _working/               ← drafts
+    specs/
     plans/
     reference/
     research/
