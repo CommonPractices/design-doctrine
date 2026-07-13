@@ -1,0 +1,507 @@
+/* ============================================================================
+   FOUNDATION — the shared visual identity.
+
+   Drop this into a project unchanged. It provides:
+     · the token vocabulary            (§1)
+     · five themes                     (§2)
+     · the colour-blind modifier       (§3)
+     · OS forced-colors support        (§4)
+     · the accessibility floor         (§5)
+     · the component grammar           (§6)
+
+   What it deliberately does NOT provide: layout. Composition is each app's own
+   business — see visual-identity.md.
+
+   ── THE FOUR AXES ──────────────────────────────────────────────────────────
+   Each owns exactly one concern. Where two axes set the same property you have
+   a bug factory.
+
+     PERSONA         type · density · shape · WHAT IS PRESENT   — never colour
+     THEME           colour                                     — never type
+     COLOUR-BLIND    status hues only                           — a modifier
+     forced-colors   the whole palette, when active             — it wins
+
+   Set them independently:
+     <html data-persona="intermediate" data-theme="dark" data-cb="on">
+   ========================================================================= */
+
+
+/* ── LAYER ORDER — declare once; it decides who wins. ──────────────────────
+   !important INVERTS layer order (normal: later wins; !important: EARLIER
+   wins). A protected floor therefore needs BOTH halves, or a user stylesheet
+   with !important defeats every guarantee.
+
+     floor-hard : FIRST + !important  → beats a user's !important
+     floor-soft : LAST  + normal      → beats a user's normal rules
+   ------------------------------------------------------------------------ */
+@layer floor-hard, tokens, base, components, app, user, floor-soft;
+
+
+/* ═══ §1 · TOKENS ══════════════════════════════════════════════════════════
+   EVERYTHING is a token — not just colour. Type size and density especially:
+   hard-coding those is an accessibility gap, not a taste gap, because a user
+   who needs 20px text then has no path.
+   ========================================================================= */
+@layer tokens {
+  :root {
+    /* — surfaces ————————————————————————————— */
+    --ground:      #F7F6F4;   /* the page behind everything */
+    --panel:       #FFFFFF;   /* a raised surface: card, panel */
+    --panel-sunk:  #EFEDEA;   /* a recessed surface: well, inset */
+    --line:        #D9D5CF;   /* ordinary borders, dividers */
+    --line-strong: #B8B2A9;   /* control borders — must read as interactive */
+
+    /* — ink ————————————————————————————————— */
+    --ink:         #15181C;   /* body text */
+    --ink-dim:     #5A6069;   /* secondary text. MUST still pass 4.5:1 */
+    --ink-faint:   #8A9098;   /* labels, captions. MUST still pass 4.5:1 */
+
+    /* — semantic colour ————————————————————————
+       These MEAN things. They are not decoration, and they are NOT the accent.
+       Every state that uses them must ALSO carry text and a shape (§6). */
+    --accent:      #C22C24;   /* authority / live / "this is yours" */
+    --accent-ink:  #FFFFFF;   /* text ON the accent */
+    --amber:       #9A6B12;   /* pending · attention · mismatch */
+    --amber-bg:    #FBF1DC;
+    --green:       #2E7D5B;   /* confirmed · good · settled */
+    --green-bg:    #E3F3EB;
+    --cyan:        #1D6E8C;   /* DATA. Numeric readouts, measurements. */
+    --focus:       #2B6CB0;   /* focus ring. Never the same as --accent. */
+
+    /* — the band ————————————————————————————
+       The identity lives HERE. A coloured header surface, not a 7px dot.
+       Colour that appears only in an accent pip is not colour. */
+    --band:        var(--panel);
+    --band-ink:    var(--ink);
+
+    /* — type ———————————————————————————————— */
+    --font-ui:   -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --size:      14px;        /* base. The persona and the user both move this. */
+    --scale:     1.15;        /* modular scale ratio */
+    --size-sm:   calc(var(--size) / var(--scale));
+    --size-lg:   calc(var(--size) * var(--scale));
+    --weight:    600;         /* "strong" weight */
+
+    /* — space ——————————————————————————————— */
+    --density:   1;           /* ONE number drives all spacing */
+    --pad:       calc(10px * var(--density));
+    --gap:       calc(8px  * var(--density));
+    --r:         3px;         /* radius. Instruments have small radii. */
+
+    /* — motion —————————————————————————————— */
+    --dur:       .12s;
+  }
+  @media (prefers-reduced-motion: reduce) { :root { --dur: 0s; } }
+
+
+  /* ── PERSONAS — an expertise ladder. ────────────────────────────────────
+     A persona owns TYPE · DENSITY · SHAPE · PRESENCE. It NEVER owns colour;
+     that is the theme's job, and keeping them disjoint is what lets any
+     persona combine with any theme.
+
+     Three rungs is a common shape, not a rule. Name them in your own
+     vernacular; add or drop rungs if your users don't stratify that way. */
+
+  :root[data-persona="novice"]       { --size:16px; --density:1.5;  --r:12px; }
+  :root[data-persona="intermediate"] { --size:14px; --density:1;    --r:5px;  }  /* default */
+  :root[data-persona="advanced"]     { --size:12px; --density:.72;  --r:2px;  }
+
+  /* PRESENCE — the part that matters most, and the part most often missed.
+     A persona changes WHAT IS ON SCREEN, not merely how it looks.
+
+     Mark anything that a rung has no use for. Note the semantics:
+       ABSENT   — this concept does not exist in that user's world
+       HIDDEN   — it exists; they opted not to see it (use Advanced reveal)
+       DISABLED — it exists, applies now, and is temporarily unavailable
+     These are three different statements. Choosing the wrong one lies. */
+  [data-not-novice]                                 { display: revert; }
+  :root[data-persona="novice"] [data-not-novice]    { display: none !important; }
+
+
+  /* ── ADVANCED REVEAL ────────────────────────────────────────────────────
+     Reveal, never enable. The setting always exists and its default is always
+     in effect; Advanced only exposes the CONTROL. */
+  [data-advanced-only]                              { display: none; }
+  :root[data-advanced="on"] [data-advanced-only]    { display: revert; }
+}
+
+
+/* ═══ §2 · THEMES — colour only ════════════════════════════════════════════
+   Five, in one menu. The accessibility theme is NOT shunted into a separate
+   "accessibility mode" — it is picked like any other.
+   ========================================================================= */
+@layer tokens {
+
+  /* DAYLIGHT — a bright room. Clean, neutral, unremarkable in a good way. */
+  :root[data-theme="daylight"] {
+    --ground:#EEF1F4; --panel:#FFFFFF; --panel-sunk:#E2E7EC;
+    --line:#CBD4DC; --line-strong:#A2AFBB;
+    --ink:#16202A; --ink-dim:#46566A; --ink-faint:#56677A;
+    --accent:#1D5FA8; --accent-ink:#FFFFFF;
+    --amber:#8A5F10; --amber-bg:#FBF1DC;
+    --green:#1F6F52; --green-bg:#E1F0E9;
+    --focus:#1D5FA8; --cyan:#1D6E8C;
+    --band:#17324D; --band-ink:#E9F1F8;
+  }
+
+  /* DARK — a dark room, sustained attention. An instrument, not a document. */
+  :root[data-theme="dark"] {
+    --ground:#07090B; --panel:#101519; --panel-sunk:#040608;
+    --line:#1E262D; --line-strong:#33404A;
+    --ink:#E9F1F5; --ink-dim:#A3B4C0; --ink-faint:#8497A5;
+    --accent:#FF4438; --accent-ink:#FFFFFF;
+    --amber:#FFB020; --amber-bg:#2A1F08;
+    --green:#3DD68C; --green-bg:#0C2318;
+    --focus:#7FC4FF; --cyan:#4FC3E8;
+    --band:#1B0B0A; --band-ink:#FFD9D5;
+  }
+
+  /* WARM — long sessions, easy on the eye. */
+  :root[data-theme="warm"] {
+    --ground:#F3E9DC; --panel:#FFF9F1; --panel-sunk:#F2E4D2;
+    --line:#E0CCB2; --line-strong:#C3A98C;
+    --ink:#3A2E22; --ink-dim:#5C4D37; --ink-faint:#655640;
+    --accent:#8F3A12; --accent-ink:#FFF6EC;
+    --amber:#8F5A0A; --amber-bg:#F8EBD2;
+    --green:#356A4A; --green-bg:#E2EFE4;
+    --focus:#2B6CB0; --cyan:#16657F;
+    --band:#8F3A12; --band-ink:#FFF3E8;
+  }
+
+  /* PAPER — near-monochrome. Calm; screenshots and prints well. */
+  :root[data-theme="paper"] {
+    --ground:#F4F3F0; --panel:#FBFAF8; --panel-sunk:#E9E7E2;
+    --line:#D2CFC8; --line-strong:#A8A49B;
+    --ink:#1B1A18; --ink-dim:#4C4A45; --ink-faint:#5E5B55;
+    --accent:#1B1A18; --accent-ink:#FBFAF8;
+    --amber:#7A5A0E; --amber-bg:#F0EAD9;
+    --green:#2A5C42; --green-bg:#E4EBE5;
+    --focus:#1B1A18; --cyan:#2E4E5C;
+    --band:#1B1A18; --band-ink:#FBFAF8;
+  }
+
+  /* MAXIMUM CONTRAST — the accessibility theme. ~18:1, well beyond WCAG AAA.
+     Harsh by design: that IS the accommodation, not a flaw. No dim text, no
+     low-contrast hints, thick borders, unmissable focus. */
+  :root[data-theme="maxcontrast"] {
+    --ground:#000000; --panel:#000000; --panel-sunk:#0A0A0A;
+    --line:#FFFFFF; --line-strong:#FFFFFF;
+    --ink:#FFFFFF; --ink-dim:#FFFFFF; --ink-faint:#E8E8E8;
+    --accent:#FFD400; --accent-ink:#000000;
+    --amber:#FFD400; --amber-bg:#2A2200;
+    --green:#00E676; --green-bg:#00230F;
+    --focus:#FFD400; --cyan:#7FE7FF;
+    --band:#000000; --band-ink:#FFFFFF;
+  }
+  /* "Dim" is a low-contrast affordance — and this theme exists precisely for
+     people whom low contrast fails. So there is no dim text here. */
+  :root[data-theme="maxcontrast"] .u-dim,
+  :root[data-theme="maxcontrast"] .u-faint { color: var(--ink); }
+}
+
+
+/* ═══ §3 · COLOUR-BLIND SAFE — a MODIFIER, not a theme ═════════════════════
+   Maximum contrast fixes LUMINANCE. This fixes HUE. They are different
+   problems and ONE PERSON CAN NEED BOTH — so this layers on top of ANY theme
+   rather than being a sixth entry in the theme list. As a theme, someone
+   would have to choose which disability to accommodate.
+
+   Okabe-Ito hues. Note they are chosen for HUE SEPARATION, not luminance —
+   #E69F00 on white is only ~2:1 — so light and dark grounds get different
+   lightnesses of the same hue.
+   ========================================================================= */
+@layer tokens {
+  :root[data-cb="on"] {                    /* light grounds */
+    --green:  #005B8F;                     /* confirmed  → deep blue */
+    --amber:  #8A5A00;                     /* pending    → dark orange */
+    --accent: #A8460A;                     /* live/auth  → deep vermilion */
+    --cyan:   #16657F;
+    --green-bg:#E2EEF6; --amber-bg:#F7EEDC;
+  }
+  :root[data-cb="on"][data-theme="dark"],
+  :root[data-cb="on"][data-theme="maxcontrast"] {   /* dark grounds */
+    --green:  #56B4E9;
+    --amber:  #E69F00;
+    --accent: #FF6E40;
+    --cyan:   #7FD4F0;
+    --green-bg:#0C2333; --amber-bg:#2A1F08;
+  }
+}
+
+
+/* ═══ §4 · forced-colors — the OS takes over ═══════════════════════════════
+   Not a theme. A mode we RESPECT. This is what users who need it actually
+   switch on, and shipping a high-contrast theme is NOT a substitute for
+   honouring it. Get out of the way: stop painting, keep every boundary a real
+   border.
+   ========================================================================= */
+@media (forced-colors: active) {
+  :root {
+    --ground:Canvas; --panel:Canvas; --panel-sunk:Canvas;
+    --ink:CanvasText; --ink-dim:CanvasText; --ink-faint:CanvasText;
+    --line:CanvasText; --line-strong:CanvasText;
+    --accent:Highlight; --accent-ink:HighlightText;
+    --amber:CanvasText; --green:CanvasText; --cyan:CanvasText;
+    --band:Canvas; --band-ink:CanvasText;
+    --focus:Highlight;
+  }
+  /* Anything painted with background-color is FLATTENED by the OS and
+     vanishes. Status dots and drawn marks must carry a real border. */
+  .chip::before,
+  .mark            { border: 1px solid CanvasText; }
+  .card, .band     { border: 1px solid CanvasText; }
+}
+
+
+/* ═══ §5 · THE ACCESSIBILITY FLOOR ═════════════════════════════════════════
+   Users may restyle everything. They may not break these.
+
+   Enforced by CONSTRUCTION, not convention: floor-hard is declared FIRST with
+   !important (beating a user's !important, since !important inverts layer
+   order) and floor-soft LAST without it (beating a user's normal rules).
+   Both halves, or it does not hold.
+
+   The floor protects CAPABILITY, not taste. Total cosmetic freedom; the one
+   thing you may not do is make the product unusable for someone else.
+   ========================================================================= */
+@layer floor-hard {
+  /* Focus must ALWAYS be visible. `outline:none` is the single most common
+     accessibility bug on the web. */
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid var(--focus) !important;
+    outline-offset: 2px !important;
+  }
+  /* A hidden live region silently MUTES every announcement a screen-reader
+     user depends on. */
+  [aria-live] {
+    display: block !important;
+    visibility: visible !important;
+  }
+  /* Interactive targets keep a usable minimum. */
+  button, select, [role="button"] {
+    min-height: 24px !important;
+    min-width: 24px !important;
+  }
+  /* Screen-reader-only text stays reachable. */
+  .sr-only:not([aria-live]) {
+    position: absolute !important;
+    width: 1px !important; height: 1px !important;
+    overflow: hidden !important;
+    clip-path: inset(50%) !important;
+    white-space: nowrap !important;
+    display: block !important;
+  }
+}
+@layer floor-soft {
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+  [aria-live] { display: block; visibility: visible; }
+  button, select, [role="button"] { min-height: 24px; min-width: 24px; }
+}
+/* Maximum contrast wants an unmissable ring. */
+:root[data-theme="maxcontrast"] :where(a,button,input,select,summary):focus-visible {
+  outline-width: 4px;
+}
+
+
+/* ═══ §6 · BASE + COMPONENT GRAMMAR ════════════════════════════════════════
+   Not a component library — a GRAMMAR. These are the shapes that make an app
+   read as part of the family. Compose them however your app needs.
+   ========================================================================= */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font: var(--size)/1.45 var(--font-ui);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+}
+
+@layer components {
+
+  /* ── THE BAND — where the identity lives ────────────────────────────────
+     A coloured header surface. This, more than any accent, is what makes an
+     app recognisably of the family.
+
+     ⚠ A tinted surface MUST declare its own text colour. Do not assume the
+     inherited one still works — that is how you get light text on a light
+     header. */
+  .band {
+    background: var(--band);
+    color: var(--band-ink);
+    border-bottom: 1px solid var(--line);
+    padding: var(--pad) calc(var(--pad) * 1.4);
+    display: flex; align-items: center; gap: calc(var(--gap) * 1.5);
+    flex-wrap: wrap;
+  }
+  .band .u-dim, .band .u-faint { color: var(--band-ink); opacity: .72; }
+
+  /* A panel header carries a WHISPER of the band — never the full strength. */
+  .card > header {
+    background: color-mix(in srgb, var(--band) 7%, var(--panel) 93%);
+    color: var(--ink);                     /* ← state it. Never assume. */
+    border-bottom: 1px solid var(--line);
+    padding: var(--pad) calc(var(--pad) * 1.4);
+    display: flex; align-items: center; gap: var(--gap); flex-wrap: wrap;
+  }
+  .card > header h2 { margin: 0; font-size: var(--size-lg); color: var(--ink); }
+
+  /* ── SURFACES ───────────────────────────────────────────────────────────── */
+  .card {
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+  }
+  .card > .body {
+    padding: var(--pad) calc(var(--pad) * 1.4);
+    display: grid; gap: var(--gap);
+  }
+
+  /* ── DATA READOUTS ──────────────────────────────────────────────────────
+     Numbers are the point. Monospace + tabular figures so columns align, and
+     so a changing value doesn't reflow its neighbours. */
+  .num, .readout {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+  /* In dark/instrument contexts the DATA is the interface — it glows. */
+  :root[data-theme="dark"] .num,
+  :root[data-theme="dark"] .readout { color: var(--cyan); }
+
+  /* ── STATUS CHIP ────────────────────────────────────────────────────────
+     ⚠ NEVER COLOUR ALONE. A chip is colour + a shape + TEXT. Colour-blind
+     users, forced-colors users, and screen-reader users each rely on a
+     different one of those three. */
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: var(--size-sm); font-weight: 700;
+    letter-spacing: .04em; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .chip::before {
+    content: ""; width: 7px; height: 7px; border-radius: 50%;
+    background: currentColor; flex: 0 0 auto;
+  }
+  .chip.is-good    { color: var(--green); }
+  .chip.is-pending { color: var(--amber); }
+  .chip.is-live    { color: var(--accent); }
+  .chip.is-idle    { color: var(--ink-faint); }
+
+  /* ── DRAWN MARK ─────────────────────────────────────────────────────────
+     A warning triangle, drawn in CSS. NOT a glyph.
+
+     An exotic codepoint (⚠ U+26A0, etc.) depends on font coverage and correct
+     encoding, and will eventually render as mojibake or a tofu box on a
+     machine you don't control. A drawn shape has no codepoint to corrupt and
+     no font to be missing.
+
+     It is decorative: mark it aria-hidden, and put the MEANING in real text.
+       <span class="mark" aria-hidden="true"></span>1/160
+       <span class="sr-only">, differs from expected</span>            */
+  .mark {
+    display: inline-block; width: 0; height: 0; flex: 0 0 auto;
+    border-left: 4.5px solid transparent;
+    border-right: 4.5px solid transparent;
+    border-bottom: 8px solid currentColor;
+    position: relative; top: 1px;
+  }
+
+  /* ── CONTROLS ───────────────────────────────────────────────────────────
+     Native elements. A generated form of native controls is the most
+     accessible thing on the web — keyboard, screen reader, high contrast and
+     reduced motion all come free. Hand-drawn control lookalikes throw that
+     away and read to a screen reader as "button, button, button". */
+  button, .btn {
+    font: inherit; font-size: var(--size);
+    padding: calc(var(--pad) * .55) var(--pad);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r);
+    background: var(--panel); color: var(--ink);
+    cursor: pointer;
+    transition: background var(--dur);
+  }
+  button:hover:not(:disabled), .btn:hover { background: var(--panel-sunk); }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.is-primary {
+    background: var(--ink); color: var(--ground);
+    border-color: var(--ink); font-weight: var(--weight);
+  }
+  button.is-danger {
+    border-color: var(--accent); color: var(--accent);
+    font-weight: var(--weight);
+  }
+
+  select, input[type="text"], input[type="number"], textarea {
+    font: inherit; font-size: var(--size);
+    font-family: var(--font-mono); font-variant-numeric: tabular-nums;
+    padding: calc(var(--pad) * .5) calc(var(--pad) * .7);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r);
+    background: var(--panel); color: var(--ink);
+  }
+  select:disabled, input:disabled, textarea:disabled {
+    opacity: .5; cursor: not-allowed; background: var(--panel-sunk);
+  }
+
+  /* A labelled field. */
+  .field {
+    display: grid;
+    grid-template-columns: var(--label-w, 110px) 1fr;
+    gap: var(--gap); align-items: center;
+    padding: calc(var(--pad) * .35) 0;
+  }
+  .field > label { font-size: var(--size); color: var(--ink-dim); }
+
+  /* ── READ-ONLY VALUES ───────────────────────────────────────────────────
+     Something that can NEVER be set is TEXT, not a disabled input. A disabled
+     input says "you could set this if…" — and you never can. */
+  .ro {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--size);
+  }
+  .ro small { font-family: var(--font-ui); color: var(--ink-faint); margin-left: 6px; }
+
+  /* ── TABLES — the accessible comparison surface ─────────────────────────
+     When several things must be compared, a real <table> beats side-by-side
+     panels: a screen reader navigates it by row and column and announces
+     "row header, column header, value". Spatial panels convey nothing.
+     Wide tables scroll; they never clip. */
+  .table-wrap { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td {
+    text-align: left;
+    padding: calc(var(--pad) * .7) var(--pad);
+    border-top: 1px solid var(--line);
+  }
+  thead th {
+    border-top: 0;
+    font-size: var(--size-sm); font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ── UTILITY ────────────────────────────────────────────────────────────── */
+  .u-dim   { color: var(--ink-dim); }
+  .u-faint { color: var(--ink-faint); }
+  .legend  {
+    font-size: var(--size-sm); font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .row { display: flex; align-items: center; gap: var(--gap); flex-wrap: wrap; }
+  .spacer { flex: 1; }
+}

@@ -1,0 +1,159 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Foundation — verification</title>
+
+<!-- Deliberately NOT a camera app. If the identity only works for the app it
+     came from, it is not an identity. This is a deployment console. -->
+<link rel="stylesheet" href="foundation.css">
+
+<style>
+  @layer app {
+    .page { max-width: 1000px; margin: 0 auto; padding: calc(var(--pad) * 2);
+            display: grid; gap: calc(var(--gap) * 2); }
+    .wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: var(--gap); }
+  }
+</style>
+
+<div id="live" class="sr-only" role="status" aria-live="polite"></div>
+
+<div class="band">
+  <strong>Deployer</strong>
+  <span class="u-faint">prod · us-east-1</span>
+  <span class="spacer"></span>
+
+  <label class="row" for="persona"><span>Role</span>
+    <select id="persona">
+      <option value="novice">Operator</option>
+      <option value="intermediate" selected>Engineer</option>
+      <option value="advanced">SRE</option>
+    </select>
+  </label>
+
+  <label class="row" for="theme"><span>Theme</span>
+    <select id="theme">
+      <option value="daylight" selected>Daylight</option>
+      <option value="dark">Dark</option>
+      <option value="warm">Warm</option>
+      <option value="paper">Paper</option>
+      <option value="maxcontrast">Maximum contrast</option>
+    </select>
+  </label>
+
+  <label class="row" for="cb"><input type="checkbox" id="cb"><span>Colour-blind safe</span></label>
+  <label class="row" for="adv"><input type="checkbox" id="adv"><span>Advanced</span></label>
+</div>
+
+<div class="page">
+
+  <section class="card">
+    <header>
+      <h2>checkout-service</h2>
+      <span class="u-faint" data-not-novice>rev 8f31c2a</span>
+      <span class="spacer"></span>
+      <span class="chip is-live">Deploying</span>
+    </header>
+    <div class="body">
+      <div class="field">
+        <label for="env">Environment</label>
+        <select id="env"><option>production</option><option>staging</option></select>
+      </div>
+      <div class="field">
+        <label for="rev">Release</label>
+        <select id="rev"><option>v2.4.1</option><option>v2.4.0</option></select>
+      </div>
+      <div class="field" data-advanced-only>
+        <label for="canary">Canary %</label>
+        <input type="number" id="canary" value="10">
+      </div>
+      <div class="field">
+        <span class="u-dim">Last deploy</span>
+        <span class="ro">14:02 <small>by jschwefel</small></span>
+      </div>
+      <div class="row">
+        <button class="is-primary">Deploy</button>
+        <button>Roll back</button>
+        <button class="is-danger" data-advanced-only>Force unlock</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="card" data-not-novice>
+    <header><h2>Fleet</h2><span class="legend">all regions</span></header>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Region</th><th scope="col" class="num">Nodes</th>
+              <th scope="col" class="num">Rev</th><th scope="col">State</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">us-east-1</th><td class="num">24</td>
+              <td class="num">2.4.1</td><td><span class="chip is-good">Healthy</span></td></tr>
+          <tr><th scope="row">eu-west-1</th><td class="num">12</td>
+              <td class="num">2.4.0</td>
+              <td><span class="chip is-pending">
+                <span class="mark" aria-hidden="true"></span>Draining
+                <span class="sr-only">— behind by one revision</span></span></td></tr>
+          <tr><th scope="row">ap-south-1</th><td class="num">8</td>
+              <td class="num">2.4.1</td><td><span class="chip is-idle">Idle</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <header><h2>Nodes</h2><span class="legend">live</span></header>
+    <div class="body">
+      <div class="wall">
+        <div class="card"><div class="body">
+          <div class="row"><strong>node-01</strong><span class="spacer"></span>
+            <span class="chip is-good">Up</span></div>
+          <span class="ro">cpu 34% <small>mem 61%</small></span>
+        </div></div>
+        <div class="card"><div class="body">
+          <div class="row"><strong>node-02</strong><span class="spacer"></span>
+            <span class="chip is-pending"><span class="mark" aria-hidden="true"></span>Restarting</span></div>
+          <span class="ro">cpu 8% <small>mem 22%</small></span>
+        </div></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  const root = document.documentElement;
+  const $ = s => document.querySelector(s);
+  const q = [];
+  let busy = false;
+  const announce = m => {
+    q.push(m);
+    if (busy) return;
+    busy = true;
+    (function pump(){ const n = q.shift();
+      if (n === undefined) { busy = false; return; }
+      $('#live').textContent = n; setTimeout(pump, 900); })();
+  };
+
+  root.dataset.persona = 'intermediate';
+  root.dataset.theme = 'daylight';
+
+  $('#persona').addEventListener('change', e => {
+    root.dataset.persona = e.target.value;
+    const adv = e.target.value === 'advanced';
+    $('#adv').checked = adv;
+    root.dataset.advanced = adv ? 'on' : 'off';
+    announce('Role: ' + e.target.selectedOptions[0].textContent);
+  });
+  $('#theme').addEventListener('change', e => {
+    root.dataset.theme = e.target.value;
+    announce('Theme: ' + e.target.selectedOptions[0].textContent);
+  });
+  $('#cb').addEventListener('change', e => {
+    if (e.target.checked) root.dataset.cb = 'on'; else root.removeAttribute('data-cb');
+    announce(e.target.checked ? 'Colour-blind safe palette on' : 'Colour-blind safe palette off');
+  });
+  $('#adv').addEventListener('change', e => {
+    root.dataset.advanced = e.target.checked ? 'on' : 'off';
+  });
+</script>

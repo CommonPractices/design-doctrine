@@ -12,7 +12,9 @@ current?" is answerable by where a file lives — not by reading it and inferrin
 **`docs/` holds sealed content only.** Approved, current, authoritative.
 
 **`docs/_working/` holds everything else.** Drafts, work in progress, analysis, scratch.
-`_working/` is a subdirectory of `docs/`, and it **mirrors `docs/`'s subdirectory structure**:
+`_working/` is a subdirectory of `docs/`, and it **mirrors `docs/`'s subdirectory structure** —
+one draft subdir for every `docs/` subdir except `_working` itself (there is no
+`docs/_working/_working`):
 
 ```
 docs/                     ← sealed (except for '_working')
@@ -58,17 +60,33 @@ A document is sealed **only when the owner approves it**. Nothing self-promotes.
 
 ---
 
-## 4. `_working/` is tracked
+## 4. The two fates of a draft
 
-`_working/` is under version control, with one exception: `_working/feedback/` is untracked
-(it is the owner's private space).
+Not every draft is destined to be sealed. A draft in `docs/_working/` has **one of two futures**,
+decided by *what kind of document it is*:
+
+| Draft kind | Fate | Why |
+|---|---|---|
+| **Durable reference** — a spec, an authoring guide, anything a reader will need *after* the work ships | **Sealed** — `git mv` up into `docs/` (§3) | It stays live; it earns a permanent, undated home. |
+| **Working scaffolding** — an implementation plan, a design analysis, a bring-up finding | **Deleted at ship** — removed from the tree; git keeps it (§6) | Its job ends when the work lands; keeping it clutters the tree (§6). |
+
+The fork is *"will a reader need this after shipping?"* Yes → it seals. No → it is deleted once
+the work it guided is done. Sealing (§3) and deletion (§6) are the two exits from `_working/`, not
+one path with an exception.
+
+---
+
+## 5. `docs/_working/` is tracked
+
+`docs/_working/` is under version control, with one exception: `docs/_working/feedback/` is
+untracked (it is the owner's private space).
 
 Tracking drafts is deliberate. A draft that exists only on one machine has no recovery path,
 and no one else can see what is in flight.
 
 ---
 
-## 5. No historical documents in the shipped tree
+## 6. No historical documents in the shipped tree
 
 Implementation plans, design analyses, and superseded specs become **history** once the work
 ships. Remove them. **Git is the archive.**
@@ -80,9 +98,9 @@ A tree full of stale plans is a tree in which no plan is trusted.
 
 ---
 
-## 6. Provenance is never deleted
+## 7. Provenance is never deleted
 
-§5 governs **documents**. It does not govern the **decision record**.
+§6 governs **documents**. It does not govern the **decision record**.
 
 A superseded decision is **struck and marked**, with a pointer to what replaced it. It is not
 removed. A reader must be able to see that a decision was reversed, and why — that information
@@ -97,7 +115,7 @@ The distinction:
 
 ---
 
-## 7. Status is explicit, not inferred
+## 8. Status is explicit, not inferred
 
 Every decision record carries a **status** — proposed, accepted, superseded, reopened — and
 every non-obvious claim carries a **provenance tag** distinguishing what was verified, what came
@@ -109,7 +127,7 @@ An unmarked claim is provisional by default.
 
 ---
 
-## 8. Markers are greppable
+## 9. Markers are greppable
 
 Staleness markers must be **mechanically findable** — a unique, unmistakable token, not prose.
 Before building on any part of the record, the markers can be swept for in one command.
@@ -118,7 +136,7 @@ A convention that requires reading to enforce is not enforceable.
 
 ---
 
-## 9. Never delete the record to tidy it
+## 10. Never delete the record to tidy it
 
 The record is not clutter. Reversals, rejected proposals, and open questions are the most
 valuable entries in it, because they are the ones a future reader would otherwise re-derive
