@@ -12,7 +12,9 @@ current?" is answerable by where a file lives — not by reading it and inferrin
 **`docs/` holds sealed content only.** Approved, current, authoritative.
 
 **`docs/_working/` holds everything else.** Drafts, work in progress, analysis, scratch.
-`_working/` is a subdirectory of `docs/`, and it **mirrors `docs/`'s subdirectory structure**:
+`_working/` is a subdirectory of `docs/`, and it **mirrors `docs/`'s subdirectory structure** —
+one draft subdir for every `docs/` subdir except `_working` itself (there is no
+`docs/_working/_working`):
 
 ```
 docs/                     ← sealed (except for '_working')
@@ -58,10 +60,10 @@ A document is sealed **only when the owner approves it**. Nothing self-promotes.
 
 ---
 
-## 4. `_working/` is tracked
+## 4. `docs/_working/` is tracked
 
-`_working/` is under version control, with one exception: `_working/feedback/` is untracked
-(it is the owner's private space).
+`docs/_working/` is under version control, with one exception: `docs/_working/feedback/` is
+untracked (it is the owner's private space).
 
 Tracking drafts is deliberate. A draft that exists only on one machine has no recovery path,
 and no one else can see what is in flight.
