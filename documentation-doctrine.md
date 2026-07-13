@@ -17,7 +17,7 @@ one draft subdir for every `docs/` subdir except `_working` itself (there is no
 `docs/_working/_working`):
 
 ```
-docs/                     ← sealed (except for '_working')
+docs/                     ← sealed (except _working/)
   specs/
   plans/
   reference/
@@ -78,11 +78,12 @@ one path with an exception.
 
 ## 5. `docs/_working/` is tracked
 
-`docs/_working/` is under version control, with one exception: `docs/_working/feedback/` is
-untracked (it is the owner's private space).
+**All of `docs/_working/` is under version control** — every subdirectory, `feedback/`
+included. There is no untracked carve-out.
 
 Tracking drafts is deliberate. A draft that exists only on one machine has no recovery path,
-and no one else can see what is in flight.
+and no one else can see what is in flight — and that reasoning applies to the feedback record as
+much as to any other draft.
 
 ---
 
