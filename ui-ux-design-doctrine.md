@@ -7,6 +7,11 @@ Written after building — and repeatedly breaking — a themeable, persona-driv
 control UI. Most of these rules exist because a specific, expensive mistake was made. Those
 mistakes are named, because the mistake is the argument.
 
+**Companion:** [Decision Doctrine](decision-doctrine.md) — how to decide *what* to build.
+Several rules here descend from it: ordered values resolve the Accessibility-vs-Choice conflict
+that produces the accessibility floor (§6); "if it has a defensible alternative, it's a setting"
+is why themes, density and personas are all user choices rather than opinions.
+
 ---
 
 ## 0. The load-bearing rule

@@ -13,7 +13,22 @@ Where a rule exists because something broke, the breakage is named. That is the 
 
 | Document | Covers |
 |---|---|
-| [UI/UX Design Doctrine](ui-ux-design-doctrine.md) | Themes, personas, colour, and accessibility. Axis separation; why a persona must change the product and not the paint; why colour must live in surfaces; the two-layer accessibility floor (and why `!important` inverts cascade layers); the taxonomy of accessibility needs; tokens; verifying the verifier. Examples from **CameraConductor**. |
+| [Decision Doctrine](decision-doctrine.md) | **How to decide.** Ordered values and how to use them (including how to resolve a genuine conflict without sacrificing either side); never widening a scoped rule into a law; "if it has a defensible alternative, it's a setting"; absent vs hidden vs disabled; preview before writing to live things; making invariants structural; recording decisions *and* non-decisions; separating requirements from mechanisms. |
+| [UI/UX Design Doctrine](ui-ux-design-doctrine.md) | **How to build it.** Themes, personas, colour, and accessibility. Axis separation; why a persona must change the product and not the paint; why colour must live in surfaces; the two-layer accessibility floor (and why `!important` inverts cascade layers); the taxonomy of accessibility needs; tokens; verifying the verifier. |
+
+Both draw their examples from **CameraConductor** — a multi-camera control service with hard
+accessibility requirements, a hostile hardware protocol, and a distributed deployment. It broke
+enough ways to be instructive.
+
+## On ordered values ("north stars")
+
+The **machinery** is portable: a small, *ordered* set of values, consulted **before** a decision
+and presented **with** the question; violations requiring a recorded, approved exception.
+
+The **contents** are not. CameraConductor ranks *Accessibility · Ease of use · Speed · Choice*,
+and that is its own product judgment — another project might rightly put Speed or Security
+first. Adopting someone else's values wholesale is itself an instance of the scope-widening
+failure these documents warn about.
 
 ## The load-bearing rule
 
