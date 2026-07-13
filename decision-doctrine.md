@@ -26,13 +26,46 @@ Rules of use:
 - **Consulted before deciding**, not cited afterward to justify a decision already made.
 - **A violation requires a recorded, approved exception.** Never a silent one.
 
-> **CameraConductor's** are, in order: **Accessibility · Ease of use (for the primary flow) ·
-> Speed · Choice.**
+### The worked example: CameraConductor's North Stars
+
+**In order:**
+
+> ### 1. Accessibility
+> **First-class, not a retrofit.**
+> Not a compliance checkbox bolted on before release — a constraint that shapes the
+> architecture. If a design is fast, elegant, and unusable with a screen reader, it is not a
+> design.
 >
-> **These are that project's judgment, not a universal ranking.** A different product might
-> rightly put Speed first, or have Security or Cost as a star. The *machinery* transfers; the
-> *contents* do not. (Adopting someone else's values wholesale is exactly the scope-widening
-> failure in §3.)
+> ### 2. Ease of use — for the *primary flow*
+> **Simple by default; power behind Advanced.**
+> Note the qualifier: **for the primary flow.** Optimising the rare expert path at the cost of
+> the common one is the classic failure. The default path must be walkable by someone who has
+> never read the manual.
+>
+> ### 3. Speed
+> **Especially app/profile switching.**
+> Latency in the thing you do a hundred times a day is not a detail. Speed is a *feature*, and
+> it is a feature that is nearly impossible to retrofit.
+>
+> ### 4. Choice
+> **Prosumer. Give options; don't hardcode one opinionated path.**
+> The user is assumed competent. Where a reasonable person could want it the other way, they
+> get to have it the other way. (This is the star that produces §4's "make it a setting".)
+
+**They are ordered, and the order does real work.** When Accessibility (#1) and Choice (#4)
+collided over user-supplied CSS, the ranking said Accessibility could not be lost — which
+forced the search for a construction that kept both (§2), rather than a quiet trade.
+
+**Every decision aligns, or it is a justified and approved exception** — recorded, never silent.
+
+**Small decisions:** if the values give a clear answer, act on it — don't ask.
+**Big decisions:** the answer the values give is the one you *recommend*.
+
+**⚠️ These four are that project's judgment, not a universal ranking.** A different product
+might rightly put Speed first, or have Security, Cost, or Correctness as a star. **The
+machinery transfers; the contents do not.** Adopting someone else's values wholesale is
+precisely the scope-widening failure in §3 — and it would be a poor advertisement for a
+document that warns about it.
 
 **Present the analysis WITH the question, never after it.**
 
@@ -43,6 +76,26 @@ rationalised second.
 > **CameraConductor:** this had to be said out loud — *"North Star analysis before every
 > choice… present that analysis WITH the question, never after or on request."* It was a
 > correction, and it was fair.
+
+### Values only exist if they change outcomes
+
+A stated value that never overrules a convenient decision is decoration. Here is where each of
+CameraConductor's four **actually changed the design** — which is the only evidence that they
+are real:
+
+| Star | Where it *forced* an outcome |
+|---|---|
+| **Accessibility** | Controls are **generated from a typed constraint model** rather than hand-drawn — which is what makes them native, labelled, and keyboard-operable *by construction*. The dense icon-grid the reference app used would have read to a screen reader as "button, button, button". |
+| | The **floor** exists (see §2). A user may restyle everything and break nothing. |
+| | Colour-blind support is a **modifier**, not a theme — because forcing someone to *choose which disability to accommodate* is not accessibility. |
+| **Ease of use** | The config **can be edited in the UI**. An earlier rule ("the config is hand-authored") would have made a new user hand-edit YAML before the product did anything — a wall at first contact. It was struck for violating this star. |
+| | Diffing flags **only what should match**. Warning about intentional differences trains the user to ignore warnings — which makes the product *worse*, not more informative. |
+| **Speed** | Live view is explicitly the **droppable** path; control traffic always wins. A monitoring wall streams cheap thumbnails so it can be left running. |
+| | Switching cameras is a **render, not a reconnect** — every camera stays connected regardless of what's displayed. |
+| **Choice** | Three layouts, five themes, three personas — **all of them ship**, none is privileged in the code. |
+| | Behaviours with defensible alternatives are **settings with safe defaults** (§4), not opinions. |
+
+**If you cannot fill in a row, that star is not a value — it is a slogan.**
 
 ---
 

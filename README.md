@@ -20,15 +20,30 @@ Both draw their examples from **CameraConductor** — a multi-camera control ser
 accessibility requirements, a hostile hardware protocol, and a distributed deployment. It broke
 enough ways to be instructive.
 
-## On ordered values ("north stars")
+## North Stars
 
-The **machinery** is portable: a small, *ordered* set of values, consulted **before** a decision
-and presented **with** the question; violations requiring a recorded, approved exception.
+A small, **ordered** set of values, checked against every non-trivial decision. **The order is
+the point** — unordered values are useless precisely when you need them, which is when two of
+them conflict.
 
-The **contents** are not. CameraConductor ranks *Accessibility · Ease of use · Speed · Choice*,
-and that is its own product judgment — another project might rightly put Speed or Security
-first. Adopting someone else's values wholesale is itself an instance of the scope-widening
-failure these documents warn about.
+CameraConductor's, in order:
+
+1. **Accessibility** — first-class, not a retrofit.
+2. **Ease of use** — for the *primary flow*. Simple by default; power behind Advanced.
+3. **Speed** — especially app/profile switching.
+4. **Choice** — prosumer. Give options; don't hardcode one opinionated path.
+
+Every decision aligns, or it is a **justified and approved exception** — recorded, never silent.
+Small decisions where the stars give a clear answer: just act. Big ones: the star's answer is
+what you *recommend*.
+
+**The machinery is portable; these four are not.** Another project might rightly put Speed,
+Security, or Correctness first. Adopting someone else's values wholesale would itself be an
+instance of the scope-widening failure these documents warn about — see
+[Decision Doctrine §3](decision-doctrine.md).
+
+**And a value that never overrules a convenient decision is decoration.** The doctrine tracks
+where each star *forced* an outcome; if you can't name one, it isn't a value, it's a slogan.
 
 ## The load-bearing rule
 
