@@ -19,6 +19,17 @@ decision against them.**
 The **order is the entire point**. Unordered values are useless *precisely when you need them*
 — when two of them conflict. "We value security and speed" resolves nothing at 2 a.m.
 
+This is a **framework, not a creed.** The load-bearing distinction:
+
+> **Alignment to your values is (virtually) non-negotiable. *How* you align to them is (almost
+> always) negotiable.**
+
+A decision must serve the values; that duty is near-absolute, and dodging it takes a recorded,
+approved exception. But *the construction that serves them* is open — usually several designs
+satisfy the stars, and picking one is a judgment call (often a setting; see §4). Keep these
+apart: the value is rigid, the means is flexible. Most of this document is about finding a means
+that honours the values without pretending the means was itself mandated (§§2–4).
+
 Rules of use:
 
 - **Small.** Three to five. A list of ten is a list of none.
@@ -61,11 +72,21 @@ forced the search for a construction that kept both (§2), rather than a quiet t
 **Small decisions:** if the values give a clear answer, act on it — don't ask.
 **Big decisions:** the answer the values give is the one you *recommend*.
 
-**⚠️ These four are that project's judgment, not a universal ranking.** A different product
-might rightly put Speed first, or have Security, Cost, or Correctness as a star. **The
-machinery transfers; the contents do not.** Adopting someone else's values wholesale is
-precisely the scope-widening failure in §3 — and it would be a poor advertisement for a
-document that warns about it.
+**⚠️ Alignment is near-non-negotiable; the *means* of alignment is not — and the contents are
+this project's judgment.** Two halves, don't conflate them:
+
+- **The framework transfers, and so does the duty to align.** Any project can (and should) have
+  a small ordered set of values and check decisions against them; within a project that has
+  them, aligning to them is close to absolute.
+- **The specific values are the project's own, and *how* you align to them is negotiable.** A
+  different product might rightly put Speed first, or have Security, Cost, or Correctness as a
+  star. And for any given decision, several constructions usually satisfy the stars — which one
+  you choose is open.
+
+Two projects landing on the same values (as similar products often do) is **convergence, not
+copying**. The failure §3 warns about is *unthinking* adoption — importing a list, or freezing a
+particular *means* into a mandate, without checking it against the actual project. Sharing the
+framework is the point; sharing values is fine when they genuinely fit.
 
 **Present the analysis WITH the question, never after it.**
 

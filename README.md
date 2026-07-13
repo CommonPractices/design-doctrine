@@ -14,33 +14,53 @@ Where a rule exists because something broke, the breakage is named. That is the 
 | Document | Covers |
 |---|---|
 | [Decision Doctrine](decision-doctrine.md) | **How to decide.** Ordered values and how to use them (including how to resolve a genuine conflict without sacrificing either side); never widening a scoped rule into a law; "if it has a defensible alternative, it's a setting"; absent vs hidden vs disabled; preview before writing to live things; making invariants structural; recording decisions *and* non-decisions; separating requirements from mechanisms. |
+| [Documentation Doctrine](documentation-doctrine.md) | **How to keep the record trustworthy.** `docs/` sealed vs `docs/_working/` drafts; dated while drafting, undated when sealed; sealing is a `git mv`; no historical documents in the shipped tree — but never delete provenance; explicit status and provenance tags; greppable staleness markers. |
 | [UI/UX Design Doctrine](ui-ux-design-doctrine.md) | **How to build it.** Themes, personas, colour, and accessibility. Axis separation; why a persona must change the product and not the paint; why colour must live in surfaces; the two-layer accessibility floor (and why `!important` inverts cascade layers); the taxonomy of accessibility needs; tokens; verifying the verifier. |
 
 Both draw their examples from **CameraConductor** — a multi-camera control service with hard
 accessibility requirements, a hostile hardware protocol, and a distributed deployment. It broke
 enough ways to be instructive.
 
-## North Stars
+## North Stars — a decision framework
 
-A small, **ordered** set of values, checked against every non-trivial decision. **The order is
-the point** — unordered values are useless precisely when you need them, which is when two of
-them conflict.
+North Stars are a **framework for deciding**, not a creed to recite. A small, **ordered** set of
+values, checked against every non-trivial decision, that turns "what should we do here?" into a
+question with a defensible answer. Any project can adopt the framework; each project fills in its
+own values.
 
-CameraConductor's, in order:
+**The framework is what transfers.** Its rules:
+
+- **Small** — three to five values. A list of ten is a list of none.
+- **Ordered** — a ranking, not a set. **The order is the point:** unordered values are useless
+  precisely when you need them, which is when two of them conflict.
+- **Consulted before deciding**, not cited afterward to justify a decision already made.
+
+**The distinction that keeps the framework honest:**
+
+> **Alignment to your North Stars is (virtually) non-negotiable. *How* you align to them is
+> (almost always) negotiable.**
+
+A decision must serve the values — that duty is close to absolute, and a violation is a
+**justified, approved, recorded exception**, never a silent one. But *the construction that
+serves them* is open: usually several designs satisfy the stars, and which one you pick is a
+judgment call, a setting, a tradeoff — the negotiable part. Confusing the two (treating a
+particular *means* as if it were the *value*) is the scope-widening failure these documents warn
+about; see [Decision Doctrine §3](decision-doctrine.md).
+
+Small decisions where the stars give a clear answer: just act. Big ones: the star's answer is
+what you *recommend*.
+
+**A worked example — CameraConductor's, in order:**
 
 1. **Accessibility** — first-class, not a retrofit.
 2. **Ease of use** — for the *primary flow*. Simple by default; power behind Advanced.
 3. **Speed** — especially app/profile switching.
 4. **Choice** — prosumer. Give options; don't hardcode one opinionated path.
 
-Every decision aligns, or it is a **justified and approved exception** — recorded, never silent.
-Small decisions where the stars give a clear answer: just act. Big ones: the star's answer is
-what you *recommend*.
-
-**The machinery is portable; these four are not.** Another project might rightly put Speed,
-Security, or Correctness first. Adopting someone else's values wholesale would itself be an
-instance of the scope-widening failure these documents warn about — see
-[Decision Doctrine §3](decision-doctrine.md).
+These four are *this* project's contents, not a universal ranking — another project might rightly
+put Speed, Security, or Correctness first. Two projects arriving at the same values (as similar
+products often will) is convergence, not copying; the caution is only against adopting a list
+*unthinkingly*, without checking it against the actual project.
 
 **And a value that never overrules a convenient decision is decoration.** The doctrine tracks
 where each star *forced* an outcome; if you can't name one, it isn't a value, it's a slogan.
