@@ -9,7 +9,7 @@ current?" is answerable by where a file lives — not by reading it and inferrin
 
 ## 1. Two states, two locations
 
-**`docs/` holds sealed content only.** Approved, current, authoritative.
+**`docs/` holds approved content only.** Current, authoritative, owner-approved.
 
 **`docs/_working/` holds everything else.** Drafts, work in progress, analysis, scratch.
 `_working/` is a subdirectory of `docs/`, and it **mirrors `docs/`'s subdirectory structure** —
@@ -17,7 +17,7 @@ one draft subdir for every `docs/` subdir except `_working` itself (there is no
 `docs/_working/_working`):
 
 ```
-docs/                     ← sealed (except _working/)
+docs/                     ← approved (except _working/)
   specs/
   plans/
   reference/
@@ -34,10 +34,10 @@ A file's location states its status. Nothing else has to.
 
 ---
 
-## 2. Dated while drafting; undated when sealed
+## 2. Dated while drafting; undated once approved
 
 - **Draft:** `docs/_working/<subdir>/YYYY-MM-DD-<topic>.md`
-- **Sealed:** `docs/<subdir>/<topic>.md`
+- **Approved:** `docs/<subdir>/<topic>.md`
 
 The date prefix marks a document as working. Its **removal is part of the promotion**.
 
@@ -46,9 +46,9 @@ stable, undated names — a name that changes when the content is revised is not
 
 ---
 
-## 3. Sealing is a move
+## 3. Promotion is a move
 
-Promotion from draft to sealed is:
+Promotion from draft to approved is:
 
 1. `git mv docs/_working/<subdir>/YYYY-MM-DD-<topic>.md docs/<subdir>/<topic>.md`
 2. Drop the date prefix.
@@ -56,22 +56,32 @@ Promotion from draft to sealed is:
 
 Use `git mv` so history follows the file.
 
-A document is sealed **only when the owner approves it**. Nothing self-promotes.
+**A document is approved only when the owner approves it. Nothing self-promotes.**
+
+> **⚠️ A document that will keep changing is not promoted once and frozen.** A specification
+> written alongside the code it describes is **promoted repeatedly** — it cuts a version, work
+> continues, it cuts another. **How that is done without drift is its own doctrine:**
+> see **[Spec Promotion Doctrine](spec-promotion-doctrine.md)** — the changeset holds only
+> deltas, the owner alone triggers promotion, and **the agent never asks whether it is time.**
+>
+> **Do not call this "sealing."** The word connotes a one-time freeze and invites a ritual: an
+> approval ceremony, and an agent queueing work for the owner to bless. A document **cuts a
+> version**. (Spec Promotion Doctrine §8.)
 
 ---
 
 ## 4. The two fates of a draft
 
-Not every draft is destined to be sealed. A draft in `docs/_working/` has **one of two futures**,
+Not every draft is destined to be promoted. A draft in `docs/_working/` has **one of two futures**,
 decided by *what kind of document it is*:
 
 | Draft kind | Fate | Why |
 |---|---|---|
-| **Durable reference** — a spec, an authoring guide, anything a reader will need *after* the work ships | **Sealed** — `git mv` up into `docs/` (§3) | It stays live; it earns a permanent, undated home. |
+| **Durable reference** — a spec, an authoring guide, anything a reader will need *after* the work ships | **Promoted** — `git mv` up into `docs/` (§3) | It stays live; it earns a permanent, undated home. |
 | **Working scaffolding** — an implementation plan, a design analysis, a bring-up finding | **Deleted at ship** — removed from the tree; git keeps it (§6) | Its job ends when the work lands; keeping it clutters the tree (§6). |
 
-The fork is *"will a reader need this after shipping?"* Yes → it seals. No → it is deleted once
-the work it guided is done. Sealing (§3) and deletion (§6) are the two exits from `_working/`, not
+The fork is *"will a reader need this after shipping?"* Yes → it is promoted. No → it is deleted once
+the work it guided is done. Promotion (§3) and deletion (§6) are the two exits from `_working/`, not
 one path with an exception.
 
 ---
