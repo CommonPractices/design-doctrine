@@ -17,10 +17,12 @@ Where a rule exists because something broke, the breakage is named. That is the 
 | [Documentation Doctrine](documentation-doctrine.md) | **How to keep the record trustworthy.** `docs/` sealed vs `docs/_working/` drafts; dated while drafting, undated when sealed; sealing is a `git mv`; no historical documents in the shipped tree — but never delete provenance; explicit status and provenance tags; greppable staleness markers. |
 | [Visual Identity](visual-identity.md) | **How to look and feel like the family.** The four axes (persona × theme × colour-blind × forced-colors); personas as an expertise ladder; colour in surfaces, not dots; the five required themes and how deviation is governed; the two-layer accessibility floor. Ships with [`assets/foundation.css`](assets/foundation.css) — drop it in unchanged — and [`assets/audit.js`](assets/audit.js), a self-testing contrast audit. |
 | [UI/UX Design Doctrine](ui-ux-design-doctrine.md) | **How to build it.** Themes, personas, colour, and accessibility. Axis separation; why a persona must change the product and not the paint; why colour must live in surfaces; the two-layer accessibility floor (and why `!important` inverts cascade layers); the taxonomy of accessibility needs; tokens; verifying the verifier. |
+| [Device-Model Doctrine](device-model-doctrine.md) | **How to describe a range of hardware.** A single-inheritance tier chain (manufacturer → family → device) so shared shape is written once; parent-first merge; partial-on-disk vs complete-after-merge validation; ids that mirror the lineage under a namespace you own; public/private extension contracts; one definition + an open identity array for relabeled-identical hardware; never hoisting a fact to a tier where it isn't universally true. |
 
-Both draw their examples from **CameraConductor** — a multi-camera control service with hard
+Most examples come from **CameraConductor** — a multi-camera control service with hard
 accessibility requirements, a hostile hardware protocol, and a distributed deployment. It broke
-enough ways to be instructive.
+enough ways to be instructive. The device-model doctrine draws its worked example from
+**DeckLibre**, a control-surface deck controller with the same appetite for breaking.
 
 ## North Stars — a decision framework
 
