@@ -6,6 +6,9 @@ owner has to service.
 **The principle:** *the approved document is the owner's. Work proceeds against a changeset that
 contains nothing but intentional change — so nothing can enter the document that nobody decided.*
 
+**And its necessary other half:** *a version cuts **around** what is unsettled, never waits for it.
+A document that can only be promoted once it is finished is a document that is never promoted.*
+
 ---
 
 ## 1. The problem this solves
@@ -121,6 +124,11 @@ not what it wrote. *A guarantee you have not attacked is not a guarantee; it is 
 | **Staleness** | Does anything cite a **superseded** decision? Does an item still stand open that evidence has since closed? |
 | **Correctness** | Does the text contradict a **verified fact**, its **own cited decision**, an **ordered value**, or a **recorded trap**? Does it assert as fact something tagged *assumed*? |
 | **Drift** | Does anything appear here that **no decision authorises**? |
+| **Open items** (§9) | **Every open item is re-examined.** Does its closing condition still hold — or has it changed, or has the question **dissolved**? A closer carried forward unchecked is a stale claim, and it is what everyone is planning against. |
+
+**The open-item sweep is not optional and it is not the last item on the list.** It is the check
+most likely to surface something real, because a closing condition is an `[A]` claim about the
+future that nobody has revisited since the last cut.
 
 **Correctness is checkable further than it looks.** "That's a judgment call" is usually an excuse.
 A claim that contradicts a verified fact, over-states an assumed one, cites a decision that says
@@ -142,11 +150,20 @@ must have meant.
 Once reconciled:
 
 1. **The deltas apply.** The changeset becomes the new approved document.
-2. **The version is set.** *Computed by default* — pre-1.0, an additive or reversing change is a
-   minor bump. **The computation is stated with its reason** (*"0.1.0 → 0.2.0: adds D-060…D-067,
-   closes no open items"*) and the **owner may override it**. A tool that silently picks the
-   number is deciding what kind of change it was — that is a judgment, and it is the owner's.
-3. **The changeset empties** and begins accumulating the next round.
+2. **The open items are carried across** (§9) — each restated, re-dated, and re-tagged. **The cut
+   does not wait for them.**
+3. **The version is set.** *Computed by default* — pre-1.0, an additive or reversing change is a
+   minor bump. **The computation is stated with its reason** and the **owner may override it**. A
+   tool that silently picks the number is deciding what kind of change it was — that is a
+   judgment, and it is the owner's.
+4. **The changeset empties** and begins accumulating the next round.
+
+**The cut states what is still open.** A version announcement that reports only what closed is a
+half-truth:
+
+> *0.1.0 → 0.2.0: adds D-060…D-067. Closes 1 open item (the mired grid, settled by measurement).
+> **3 remain open** — 1 blocked on evidence, 2 awaiting the owner. 1 closing condition changed;
+> 1 question dissolved.*
 
 **The version belongs to the DOCUMENT, not the product.** A spec can be at 0.4.0 while no code
 exists. Versioning the spec means a later change reads as *"which version changed, and where"* —
@@ -195,23 +212,100 @@ asking whether the moment has come.
 
 ---
 
-## 9. What "open" means — and it means two different things
+## 9. ⭐ OPEN ITEMS — a version cuts AROUND them, never waits for them
 
-A document may carry items that are **not settled**. Distinguish them, because they close in
-completely different ways and conflating them hides one behind the other:
+> **If every item had to be settled before a version could be cut, no version would ever be cut.**
+> There is always something open. A document that can only be promoted once it is finished is a
+> document that is never promoted — and that is strictly worse than having no gate at all.
+
+**An open item is a first-class citizen of the approved document. It does not block the cut.**
+The version cuts **around** it: the settled material is promoted, the open item is carried into
+the approved document *as an open item*, and the cut records exactly what remains unsettled.
+**The openness is approved too.**
+
+### 9.1 Open items live IN the approved document — visibly, loudly
+
+They are **quarantined, not hidden**: a dedicated section, headed so that no reader can mistake
+it — *"Open items — do NOT build on these."*
+
+**The alternative — holding open items back in the changeset until they settle — is wrong**, and
+it is worth naming why, because it is the tempting option. It would give you an approved document
+containing only settled material, which sounds clean. What it actually gives you is a
+**complete-looking document with a silent hole in it**: a reader sees no gap, does not know the
+question exists, and builds on the absence. **An unrecorded open question is re-derived — wrongly,
+by someone who never knew it was a question.**
+
+The cost of doing it this way is real and must be held correctly: the approved document now
+contains material that is explicitly **not to be built on.** Hence the loud heading. That cost is
+worth paying; the alternative hides the most important information in the document.
+
+### 9.2 "Open" means two different things — do not let them share a list
 
 | State | Meaning | How it closes |
 |---|---|---|
 | **Blocked on evidence** | The *requirement* is decided; a **measurement is missing.** | Evidence arrives. |
 | **Unratified proposal** | The agent proposed something and **the owner has not said yes.** | **The owner decides.** |
 
-**These are not the same, and must not share a list.** An unratified proposal filed among
-research tasks looks like work-in-progress when it is really **a question waiting on the owner** —
-and it will sit there, unanswered, inside an approved document, looking settled.
+**Conflating them hides one behind the other.** An unratified proposal filed among research tasks
+**looks like work in progress when it is really a question waiting on the owner** — and it will sit
+there, unanswered, inside an approved document, looking settled and looking like somebody else's
+job.
 
-Both are legitimately present in an approved document. **An approved document is not an omniscient
-document** — approval means *"this is the current approved statement, including its honest
-admissions of what is not yet known."*
+### 9.3 Every open item carries WHAT WOULD CLOSE IT — dated, tagged, and re-examined at every cut
+
+An open item that says only *"TBD"* is not a record; it is a shrug. Each one carries **what would
+settle it**, **if known** — the measurement to run, the decision needed, the evidence awaited.
+
+> ### ⚠️ THE CLOSING CONDITION IS ITSELF A CLAIM — and it can be WRONG.
+>
+> *"What would close this"* is **an assertion made at a moment, from the knowledge available
+> then.** It is not a fact about the future. It therefore carries a **provenance tag and the
+> version it was stated at**, exactly like any other claim:
+>
+> > *"As of 0.2.0: settled by writing every computed stop and asserting no snap. `[A]`"*
+>
+> **A closing condition is presumed `[A]` (assumed) unless it is genuinely verified or
+> documented.** *"This measurement will settle it"* is a hypothesis until the measurement runs.
+> Tag it honestly, or the next reader will mistake a guess for a plan.
+
+**At every cut, every open item's closing condition is RE-EXAMINED and RE-STATED.** A closer
+inherited unchanged across three cuts, never re-checked, is precisely the taint pattern that kills
+projects: **it reads as current, and it is what everyone is planning against.**
+
+### 9.4 An open item has THREE fates at a cut, not two
+
+| Fate | What it means | What the changeset must do |
+|---|---|---|
+| **Still open — closer holds** | What we said would settle it still looks right. | Restate it, re-dated. |
+| **Still open — closer CHANGED** | We learned something; **what would settle this is now different.** | **A delta, citing a decision.** A revised closing condition is not a silent edit. |
+| **DISSOLVED** | **The question was wrong.** It does not close — it **goes away**, and *why* is the finding. | A delta. **Record the dissolution and what replaced the question.** |
+
+> ### ⭐ A FALSIFIED CLOSING CONDITION IS OFTEN THE MOST VALUABLE FINDING AVAILABLE.
+>
+> If you go to run the measurement that was supposed to settle an item and discover that the
+> measurement **does not answer the question** — the question was malformed. And **a wrong
+> question quietly steers every decision downstream of it.**
+>
+> **Worked example.** A device-model design carried the open item *"what is the right FAMILY axis
+> — generation? market tier? product class?"*, with the closing condition *"research how the
+> mature open-source implementation discriminates these devices."* The research ran. The answer
+> was that **there is no family axis for that vendor at all** — the devices **enumerate their own
+> capability at connect**, and a family tier asserting capability would assert something you can
+> simply *ask the hardware*.
+>
+> The item did not close. **It dissolved.** And the finding that came out of it — that what cannot
+> be probed is not *which* properties exist but **what the values mean** — was never asked for, and
+> turned out to be the load-bearing fact of the whole design.
+>
+> Had the closing condition been treated as settled truth rather than a dated hypothesis, that
+> finding would have been read as noise. **Hold the closer loosely. It is a guess about what will
+> answer a question you may not have asked correctly.**
+
+### 9.5 An approved document is not an omniscient document
+
+Approval means *"this is the current approved statement — **including its honest admissions of
+what is not yet known.**"* A document with no open items is not a mature document; it is a
+document that is lying, or one whose author stopped asking.
 
 ---
 
