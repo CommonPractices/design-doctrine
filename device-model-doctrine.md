@@ -27,6 +27,23 @@ the model. When you write a trait lower than it is true, you copy it — and cop
 write it higher than it is true, you lie about models that don't share it. The entire structure
 below exists to give every fact exactly one honest home.
 
+**"Trait" means *any* fact — including the wire protocol.** The rule is not about a device's *shape*
+(grid, controls, geometry) specifically; it governs **every** inheritable fact. The temptation is to
+treat the shape as the inheritable thing and the *protocol* — framing, command codes, an init
+sequence, an image-upload encoding, event decoding — as something separate that each device carries
+whole. That is the same duplication the rule forbids, sneaking in through a different door. A
+manufacturer's base framing is usually **line-wide**: it belongs at the manufacturer tier and is
+inherited down exactly like the shape, with a family or a device overriding only the protocol
+*deltas* it genuinely differs on. If you find yourself building a second, parallel inheritance
+mechanism for "the protocol," stop — there is one chain, and the protocol rides it.
+
+> **DeckLibre.** The `0x7c7c`-framed vendor protocol (magic + a 2-byte command + length, brightness
+> as one command, faces as a PNG-in-ZIP upload, key events decoded from a frame) is almost certainly
+> *not* a per-model fact — the same framing spans the maker's whole deck line. So it is described once
+> at the **manufacturer** tier and inherited down the `manufacturer → family → device` chain; a variant
+> reverse-engineers only the protocol *deltas* it doesn't inherit. The protocol is not a new kind of
+> thing needing a new mechanism — it is one more trait finding its truthful tier.
+
 ---
 
 ## 1. Tiers: a single-inheritance chain, deepest-truth-wins
@@ -159,62 +176,35 @@ existing; a base is public only when it says so.
 
 ---
 
-## 6. One definition, many cosmetic identities
+## 6. One definition, many cosmetic identities — see the SMT Doctrine
 
 Manufacturers relabel *functionally identical* hardware — a different product name, a different
 USB/hardware id, a different sticker — with **zero change in how the thing actually works**.
 Modeling each relabel as its own full description is the duplication tiers were supposed to kill,
-sneaking back in at the leaf.
+sneaking back in at the leaf. So a concrete device carries a **list of the identities it is sold
+as** (one definition — one control set, one protocol, one behaviour — and **N cosmetic
+identities**); a relabel adds an *entry*, not a description.
 
-So a concrete device carries a **list of the hardware identities it is sold as**, not a single
-one. One definition — one control set, one protocol, one behaviour — and **N cosmetic
-identities**. A relabel adds an *entry*, not a description.
-
-**Make the entry shape open, on purpose.** You cannot buy one of every model, and you certainly
-can't predict a home-built clone — so the schema must **not** enumerate exactly which fields a
-relabel will vary. An entry carries whatever differs cosmetically (a display name, hardware ids,
-a serial pattern, something a future relabel invents) over an **open** object; validate that
-entries are well-formed, not that you foresaw every varying field. Presence of a field overrides
-that cosmetic detail; absence inherits the definition's default.
-
-**Guard against over-claiming.** Deciding that two labels *are* the same device is a claim about
-hardware — make it on **verified** facts (they genuinely behave identically), not on a
-convenient assumption that they *probably* do. The structure lets you collapse identities; it
-does not license you to assume two products are identical because it would be tidy.
+This pattern is portable beyond a hardware tree, so it has its **own document**: the
+[**Stupid Manufacturer Tricks (SMT) Doctrine**](smt-doctrine.md). It covers the open identity array,
+the "earn the sameness claim, never assume it" rule, the cosmetic-vs-behavioural dividing line, why a
+vendor id is not a manufacturer-tier constant, branding ≠ reported identity, and relabel-robust
+recognition. **Where the device-model tree handles real *variation*, SMT handles *sameness wearing a
+disguise*; they are complementary and used together.**
 
 > **DeckLibre:** a device definition carries a `supported_devices` array — the identities the one
-> device is sold as. Whether a specific pair (say, two models in a line) actually collapses into
-> one definition is decided per-device at hardware bring-up, on verified behaviour — the model
-> provides the mechanism, never the verdict.
+> device is sold as (see the SMT doctrine's worked example: sold-as "ulanzi", reports `Zkswe`, vid
+> `0x2207` — three identities, none a stand-in for the others).
 
 ---
 
-## 7. What the tiers must *not* own
-
-The mirror-image of §0: a fact written at the wrong tier is a bug even when it's not duplicated.
-
-- **Don't hoist a fact to a tier where it isn't universally true.** A USB vendor id *looks* like
-  a manufacturer-level constant — but relabeling (§6) means the "same" maker ships different
-  vendor ids, so the vendor id belongs in the per-identity entry, **not** on the manufacturer
-  tier. Test every candidate manufacturer- or family-level fact against: *is this true of
-  literally every descendant?* If not, it lives lower.
-- **Don't confuse branding with the reported identity.** What a device *is sold as* (a brand) and
-  what it *reports about itself* (a manufacturer string, a vendor id) need not match — and often
-  don't for relabeled or white-label hardware. Keep the human-facing name and the machine-
-  reported identity as separate facts; neither is automatically the other.
-
-> **DeckLibre:** the connected deck is sold as "ulanzi" but reports its manufacturer string as
-> `Zkswe` and lives under vendor id `0x2207`. Three different identities for one device — none is
-> a safe stand-in for the others, and none is a manufacturer-tier constant.
-
----
-
-## 8. Checklist
+## 7. Checklist
 
 Before shipping a model for a range of devices:
 
-- [ ] Every shared trait lives at the **highest tier where it is actually true** — no lower
-      (duplication), no higher (false claim).
+- [ ] Every shared trait — **including the wire protocol** — lives at the **highest tier where it is
+      actually true**: no lower (duplication), no higher (false claim). One inheritance chain carries
+      *every* fact; there is no separate mechanism for "the protocol."
 - [ ] **Single** parent per description; parent is the **nearest** honest ancestor; **depth
       uncapped**.
 - [ ] Abstract bases are **never usable directly**; only concrete leaves resolve.
@@ -225,7 +215,6 @@ Before shipping a model for a range of devices:
 - [ ] Ids **mirror the chain** (parent id + one segment) and are rooted in a namespace **you
       own**, vendor/model as segments.
 - [ ] Extensible bases declare **public/private**, default **private**.
-- [ ] Relabeled-identical hardware collapses into **one definition + an open identity array**,
-      not N descriptions — and the "these are the same device" claim rests on **verified**
-      behaviour, not assumption.
-- [ ] No fact hoisted to a tier where it isn't universally true; **branding ≠ reported identity**.
+- [ ] Relabeled-identical hardware follows the [**SMT Doctrine**](smt-doctrine.md): **one definition
+      + an open identity array**, sameness **verified not assumed**, no cosmetic id hoisted to a
+      shared tier, branding ≠ reported identity, relabel-robust recognition.
