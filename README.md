@@ -9,7 +9,53 @@ worked example is a slogan, and a rule without the mistake that produced it is u
 
 Where a rule exists because something broke, the breakage is named. That is the argument.
 
+## ⭐ Precedence — when two sources of truth conflict, SURFACE it; do not reconcile it silently
+
+**This doctrine repository is a source of truth.** So is the owner's in-session instruction. So
+is a skill's built-in default, a tool's convention, a project's own `CLAUDE.md`, a decision-log
+entry. Most of the time they agree. **When two of them genuinely conflict, the agent's job is to
+STOP and surface the conflict — not to quietly pick a winner.**
+
+> **The rule:** on a real conflict between two sources of truth, the agent **neither silently
+> follows one nor silently follows the other.** It names the conflict, says which two sources
+> disagree and how, and asks the owner to resolve it. Silent reconciliation — in *either*
+> direction — is the failure.
+
+**Why this is a top-level rule and not a footnote:**
+
+- **The owner can err.** An in-session instruction may contradict this doctrine by mistake — a
+  slip, a forgotten qualifier, a half-remembered rule. Silently *obeying* it drifts the work off
+  doctrine; silently *overriding* it with doctrine ignores that the owner may be deliberately
+  changing course. **Only the owner knows which** — so only the owner resolves it.
+- **Resolution is usually cheap and usually improves the doctrine.** Very often the honest answer
+  is *"the doctrine is right, I misspoke"* — or *"the doctrine is wrong/outdated here, amend it."*
+  Either way the conflict surfacing is what produces the fix. A silently-reconciled conflict
+  produces nothing but latent drift.
+- **This is not a licence to override the owner.** Doctrine does not automatically "win." The
+  owner is not overruled by a document. The agent's move is a **question**, not a veto — and the
+  owner's answer governs (and may well be *"change the doctrine"*).
+
+**The tell you are about to violate this:** you find yourself thinking *"the instruction
+technically conflicts with the doctrine, but I know what they meant, so I'll just…"* — **stop.**
+That is the silent reconciliation this rule forbids. Ask.
+
+> **Worked example (this repo's own history).** A brainstorming skill's built-in default said to
+> write specs to a `docs/superpowers/…` path. That conflicted with the [Documentation
+> Doctrine](documentation-doctrine.md) (drafts live in `docs/_working/`) **and** with an explicit
+> owner guardrail forbidding any `superpowers` path. Two sources of truth (skill default vs.
+> doctrine + owner) in direct conflict. The correct move was not to follow the skill silently, nor
+> even to follow the doctrine silently, but to **note the conflict and confirm** the doctrine path
+> was intended before writing. The cost was one sentence; the alternative was a file written to a
+> forbidden location under the authority of a default nobody had ratified.
+
+**Cross-references:** this is the meta-rule behind [Decision Doctrine §3](decision-doctrine.md)
+(never widen a scoped rule into a law — a conflict often *is* a widened rule meeting its
+source) and §10 (the person with the domain knowledge is right — push back once, then listen).
+The precedence rule is what those look like at the level of *the doctrine's own authority.*
+
 ## Documents
+
+| Document | Covers |
 
 | Document | Covers |
 |---|---|
