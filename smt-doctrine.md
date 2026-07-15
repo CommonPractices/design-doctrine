@@ -1,23 +1,39 @@
 # Stupid Manufacturer Tricks (SMT) Doctrine
 
-**Scope: cross-project.** How to model hardware that is **functionally identical but cosmetically
-relabeled** — the same device sold under different names, USB ids, stickers, or firmware strings, with
-**zero change in how it actually works** — so the relabels collapse into one definition instead of
-multiplying into N.
+**Scope: cross-project.** How to model hardware when a manufacturer's **naming does not match its
+behaviour** — and how to keep a naive model from being fooled by the mismatch. The name is deliberately
+blunt: "Stupid Manufacturer Tricks" is what a maker does when the label and the machine tell different
+stories.
 
-The name is deliberately blunt. "Stupid Manufacturer Tricks" is what a maker does when it ships the same
-board as three products, or white-labels someone else's hardware, or bumps a USB product id for a cosmetic
-refresh. From the software's standpoint nothing changed; from a naive model's standpoint there are suddenly
-three devices to describe, test, and keep in sync. SMT is the discipline that refuses that multiplication.
+## The two faces of SMT — a name/behaviour mismatch runs in BOTH directions
+
+A manufacturer's name and its actual behaviour can diverge two opposite ways, and **both are SMTs seen
+in the wild.** They are mirror images, and the correct response to each is the mirror of the other:
+
+| | **Face A — same behaviour, different names** | **Face B — same name, different behaviour** |
+|---|---|---|
+| The trick | one device relabeled/white-labelled as N products; new sticker, new USB id, zero behavioural change | one product name (e.g. a family) kept across a **quiet** behavioural break — one or two items changed |
+| The trap | a naive model sees **N devices** where there is **one** → duplication that drifts | a naive model sees **one behaviour** where it **changed** → a poisoned fact inherited as if still valid |
+| The danger | fix a bug in one copy, forget the others | 95% still inherits correctly, so the broken item **slides through because it looks inherited** |
+| The response | **collapse** — one definition, an array of identities (§1–§6) | **quarantine** — mark the broken fact, break inheritance for it alone (§7) |
+| The core move | *don't multiply sameness* | *don't trust continuity* |
+
+**Both faces share one root:** a manufacturer's **name is not a reliable proxy for its behaviour** —
+so never let a label, by itself, decide what a thing *does*. Face A: don't let N labels convince you of
+N behaviours. Face B: don't let one label convince you the behaviour held. The rest of this doctrine is
+Face A (§1–§6, the original and more common case), then Face B (§7).
 
 This doctrine was extracted from the [Device-Model Doctrine](device-model-doctrine.md) (where it began as
 one section) because it is a **portable pattern in its own right** — it applies to any registry of things
-that get relabeled without changing, not only to a hardware inheritance tree. The device-model doctrine
-handles *variation* (real differences, modeled by tiers); SMT handles *sameness wearing a disguise*.
+whose labels and behaviour drift apart, not only to a hardware inheritance tree. The device-model doctrine
+handles honest *variation* (real differences, modeled by tiers); SMT handles the **dishonest** cases —
+sameness wearing a disguise (Face A) and change hiding behind a stable name (Face B).
 
 ---
 
-## 0. The load-bearing rule
+# Face A — same behaviour, different names (collapse)
+
+## 0. The load-bearing rule (Face A)
 
 > **A relabel is an *identity*, not a *definition*. One definition carries many identities; a new label
 > adds an entry, never a description.**
@@ -145,9 +161,76 @@ tells them apart.
 
 ---
 
-## 6. Checklist
+# Face B — same name, different behaviour (quarantine)
 
-Before shipping a model that must survive relabeling:
+## 7. The mirror case: a stable name across a quiet behavioural break
+
+Face A is a maker giving **one behaviour many names**. Face B is the mirror: a maker keeping **one name
+across changed behaviour** — a family, a model line, a product name held for marketing continuity while
+the machine underneath is quietly altered. The canonical example is a camera family that spans a
+re-platforming (Canon "EOS" carried from EF DSLRs to RF mirrorless) — the *name* is continuous, the
+*wire behaviour* is not.
+
+> ### 7.0 The load-bearing rule (Face B)
+>
+> **A continuous name is not a continuous behaviour. When a maker keeps a label across a behavioural
+> break, do not let inheritance carry the changed fact down under the old name — mark it and quarantine
+> it.**
+
+**The danger is the opposite of Face A's, and subtler.** Face A's trap is loud (N stickers, obviously
+different ids). Face B's trap is quiet: an SMT is usually **not** a wholesale reset — the maker changes
+**one or two items** and keeps everything else. So **95% still inherits correctly**, and the one poisoned
+item **slides through precisely because it looks inherited.** A model that resets everything at the break
+would be safe but wasteful (re-deriving the 95% that didn't change); a model that inherits blindly ships
+the poisoned fact. The doctrine threads between them: **inherit normally, quarantine surgically.**
+
+### 7.1 The marker lives on the broken fact, and it is greppable
+
+The SMT marker is **not** a barrier across a whole tier or a "reset here" flag. It sits **on the specific
+fact(s) that broke**, in-band and greppable, and it names *what* changed and *against which ancestor*.
+Everything else at that tier inherits normally. The marker is a **landmine annotation on the poisoned
+item**, not a wall.
+
+- It records: the fact broke, the **ancestor it broke away from**, *what* changed (ideally: the old
+  meaning vs the new), and that it **requires re-verification**.
+- It is greppable on purpose — a single token (e.g. `smt`) so that "show me every place this maker pulled
+  a trick" is one search. Silent routing-around is exactly what this doctrine forbids; the trick is
+  **marked**, the way a superseded decision is struck rather than deleted.
+
+### 7.2 Semantics: warn **and force re-verification**
+
+A marked fact **must not clear a trust threshold on inherited confidence alone.** Its inherited
+confidence is **capped low until the fact is verified on the post-break device.** This is the whole
+defence: the trick's danger is that the poisoned item *looks* inherited and therefore *looks* trustworthy,
+so the model **refuses to trust inheritance for exactly that item** until fresh evidence lifts it. Warn
+(the human sees the trick) **and** re-verify (the machine won't ship the inherited value).
+
+This is the same discipline the [Documentation Doctrine](documentation-doctrine.md) applies to a
+superseded fact — *keep it visible, mark it, don't silently route around it* — applied one tier up, to a
+behaviour that changed under a name that didn't.
+
+### 7.3 Face B is a real difference — so why is it here, not in the inheritance tree?
+
+The [Device-Model Doctrine](device-model-doctrine.md) already models real behavioural difference with
+child tiers, and a Face-B break *is* a real difference — so a broken fact **does** get overridden at a
+more-specific tier, exactly as the tree prescribes. Face B adds one thing the plain tree does not: the
+**marker that says the override exists because the maker was dishonest with the name**, and the
+**re-verification cap** that follows. Without it, the override is silent — indistinguishable from ordinary
+honest variation — and the next person to read the model cannot tell "this child genuinely differs" from
+"this maker quietly broke compatibility and kept the name." **The tree records the difference; the SMT
+marker records that the difference was a trick, and quarantines it accordingly.**
+
+> **CameraConductor.** The device-description schema carries an in-band `smt` object on any property whose
+> meaning broke across a family re-platforming (same family name, changed wire behaviour). Inheritance
+> flows normally for every other property; the marked property's inherited confidence is capped until
+> live-verified on the post-break body. *(Worked instance of §7.1–§7.2 — the family name is the cover
+> story; the marker is the landmine.)*
+
+---
+
+## 8. Checklist
+
+**Face A — surviving relabeling (same behaviour, different names):**
 
 - [ ] A definition holds an **array of identities**, not a single one; a relabel is a **new entry**, never a
       new description.
@@ -163,3 +246,14 @@ Before shipping a model that must survive relabeling:
 - [ ] Recognition is **relabel-robust**: exact-id fast path, **fingerprint fallback** on a miss (human
       confirms low-confidence), unknown only when both fail. An unknown *id* is never treated as an unknown
       *device* without the fingerprint check.
+
+**Face B — surviving a stable name across a behavioural break (same name, different behaviour):**
+
+- [ ] Inheritance flows **normally** across the break; the model does **not** wholesale-reset at a name
+      that continued (that re-derives the 95% that didn't change).
+- [ ] The broken fact carries a **greppable, in-band marker** naming *what* changed and *which ancestor* it
+      broke from — a landmine on the fact, not a barrier across the tier.
+- [ ] A marked fact **cannot clear a trust threshold on inherited confidence alone** — its inherited
+      confidence is **capped until re-verified** on the post-break device (warn **and** re-verify).
+- [ ] The marker distinguishes **"honest variation"** (an ordinary child-tier override) from **"a trick"**
+      (a change the maker hid behind a continuous name) — so a reader can tell them apart.
