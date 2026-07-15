@@ -56,8 +56,6 @@ The precedence rule is what those look like at the level of *the doctrine's own 
 ## Documents
 
 | Document | Covers |
-
-| Document | Covers |
 |---|---|
 | [Decision Doctrine](decision-doctrine.md) | **How to decide.** Ordered values and how to use them (including how to resolve a genuine conflict without sacrificing either side); never widening a scoped rule into a law; "if it has a defensible alternative, it's a setting"; absent vs hidden vs disabled; preview before writing to live things; making invariants structural; recording decisions *and* non-decisions; separating requirements from mechanisms. |
 | [Documentation Doctrine](documentation-doctrine.md) | **How to keep the record trustworthy.** `docs/` approved vs `docs/_working/` drafts; dated while drafting, undated once approved; promotion is a `git mv`; no historical documents in the shipped tree — but never delete provenance; explicit status and provenance tags; greppable staleness markers. |
@@ -75,6 +73,17 @@ enough ways to be instructive. The device-model doctrine draws its worked exampl
 WebSocket-control doctrine generalises CameraConductor's control server, with **LiteController** —
 a lighting-control service driven by those same surfaces — as the second instance that forced the
 pattern to be made portable.
+
+## Lessons learned — project-scoped, kept for their context
+
+[`lessons-learned/`](lessons-learned/) holds **project-specific** findings and lessons — not portable
+doctrine, but the concrete context a portable rule is eventually distilled *from*. They live here
+deliberately: a lesson learned the expensive way on one project is where the next cross-project doctrine
+often starts, and the project context (what was measured, on what build, why it mattered) is load-bearing
+and worth keeping close to the doctrine it may feed. Current entries come from **medit** (a native macOS
+text editor) — a main-thread performance pass: [`medit-perf-findings.md`](lessons-learned/medit-perf-findings.md)
+(the numbers) and [`medit-perf-lessons-learned.md`](lessons-learned/medit-perf-lessons-learned.md) (what to
+carry forward).
 
 ## North Stars — a decision framework
 
