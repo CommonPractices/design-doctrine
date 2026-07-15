@@ -19,11 +19,15 @@ Where a rule exists because something broke, the breakage is named. That is the 
 | [Visual Identity](visual-identity.md) | **How to look and feel like the family.** The four axes (persona × theme × colour-blind × forced-colors); personas as an expertise ladder; colour in surfaces, not dots; the five required themes and how deviation is governed; the two-layer accessibility floor. Ships with [`assets/foundation.css`](assets/foundation.css) — drop it in unchanged — and [`assets/audit.js`](assets/audit.js), a self-testing contrast audit. |
 | [UI/UX Design Doctrine](ui-ux-design-doctrine.md) | **How to build it.** Themes, personas, colour, and accessibility. Axis separation; why a persona must change the product and not the paint; why colour must live in surfaces; the two-layer accessibility floor (and why `!important` inverts cascade layers); the taxonomy of accessibility needs; tokens; verifying the verifier. |
 | [Device-Model Doctrine](device-model-doctrine.md) | **How to describe a range of hardware.** A single-inheritance tier chain (manufacturer → family → device) so shared shape is written once; parent-first merge; partial-on-disk vs complete-after-merge validation; ids that mirror the lineage under a namespace you own; public/private extension contracts; one definition + an open identity array for relabeled-identical hardware; never hoisting a fact to a tier where it isn't universally true. |
+| [WebSocket Control Doctrine](ws-control-doctrine.md) | **How a local service exposes control over a WebSocket.** The service is the single source of truth and its own UI is just another client — no privileged back channel; asymmetric shape (rich `state`/`delta` down, thin fire-and-forget intents up); **confirm by observation** — the ack is the resulting delta, never a trusted send; loopback + no-auth by default, off-loopback ⇒ mandatory coupled auth; headless-clean (correct with zero clients); a stable `hello` identity handshake and a family-coordinated port contract; a loosely-parsed log stream as a first-class channel. |
 
 Most examples come from **CameraConductor** — a multi-camera control service with hard
 accessibility requirements, a hostile hardware protocol, and a distributed deployment. It broke
 enough ways to be instructive. The device-model doctrine draws its worked example from
-**DeckLibre**, a control-surface deck controller with the same appetite for breaking.
+**DeckLibre**, a control-surface deck controller with the same appetite for breaking. The
+WebSocket-control doctrine generalises CameraConductor's control server, with **LiteController** —
+a lighting-control service driven by those same surfaces — as the second instance that forced the
+pattern to be made portable.
 
 ## North Stars — a decision framework
 
