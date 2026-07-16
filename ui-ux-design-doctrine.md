@@ -267,6 +267,36 @@ accessibility**, and they are the ones most often left as literals.
 
 ---
 
+## 7a. When controls are GENERATED, the a11y contract lives in the descriptor
+
+Where a UI **generates** its controls from typed descriptors rather than hand-authoring each one (a form
+built from a schema, a control surface built from a device's reported capabilities), the accessibility
+contract must live **in the descriptor**, not be added by hand per control. A generated control is only as
+accessible as its descriptor forces it to be — so make an inaccessible descriptor **unexpressible**.
+
+Each descriptor entry carries, as **required** fields:
+
+- **The accessible name** — the *words* a screen reader speaks, never an icon or glyph.
+- **The announcement contract** — that state changes are announced (not merely repainted), and that
+  announcements are **queued, not clobbered** (a burst of changes must not collapse to silence — a real,
+  `[V]`-found bug).
+- **A required not-applicable state** — every derived readout must be able to say *nothing* rather than
+  assert a fact that no longer holds (§4's "colour is signal" has the same root: never announce a lie).
+- **Never-colour-alone** — anything conveyed by colour also carries shape or label.
+
+> **The rule that makes it structural:** a descriptor **without a valid a11y contract is an invalid
+> descriptor** — the generator refuses it. The vocabulary of controls *cannot express* an inaccessible
+> control, so accessibility (the top of the persona/needs ladder) is built in at authoring time, not
+> retrofitted after a screen-reader user hits the gap. This is §6's "make it structural, not polite"
+> applied to the *data* a control is generated from, exactly as §6 applies it to the CSS it renders into.
+
+> **CameraConductor:** camera controls are generated from a semantic vocabulary whose every key defines its
+> control type, its unit/domain, **and** its full a11y contract. A key missing the a11y block does not
+> ship — there is no code path that renders a nameless, unannounced, or lie-capable control, because the
+> vocabulary won't hold one.
+
+---
+
 ## 8. Verify with instruments — and verify the instruments
 
 **Contrast must be measured, never eyeballed.** Your eye is trained on your own palette and

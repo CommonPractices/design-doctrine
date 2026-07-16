@@ -95,6 +95,27 @@ you want §2.
 
 ---
 
+## 4a. A MODEL and a MEASUREMENT are separate artifacts
+
+When one file describes *what a thing is* (a durable model — a device description, a schema, a config) and
+another records *what we measured about running it* (a spike result, a fault probe, a benchmark), **keep
+them in separate files**, each with an explicit `kind`, cross-referenced by id — never fold the measurement
+into the model.
+
+They have different **lifecycles** (the model is stable per-thing-forever; a measurement can shift with an
+OS update, a driver version, or the weather of the moment under the *same* thing), different **consumers**
+(the model feeds the thing's normal operation; the measurement feeds a *decision about how to run it* —
+e.g. an isolation strategy), and different **provenance ceilings**. Bundling them makes the durable model
+carry volatile data and quietly couples two things that should version independently. A `kind` field on
+each makes the two impossible to confuse even when both are loaded together.
+
+> **CameraConductor:** the device description (a model the driver binds to) and the fault-behaviour record
+> (a per-transport measurement the supervisor reads to choose in-process vs process-per-camera isolation)
+> are **two sibling JSON files** — `<id>.json` and `<id>.fault-behaviour.json` — cross-referenced by id.
+> The description stays a clean model; the fault record evolves on its own cadence.
+
+---
+
 ## 5. Deviation
 
 Like any convention, this yields to a **recorded, articulable constraint** (Conventions Doctrine §3)
@@ -111,4 +132,6 @@ not a constraint — §2 covers it. "This file is consumed by a tool that only a
       can enforce and which survive round-tripping.
 - [ ] **JSONC / JSON5 are not used** for anything we define — they break universal readability.
 - [ ] **A tool's own file keeps the tool's format** (Conventions Doctrine); we did not touch it.
+- [ ] **A model and a measurement about it are separate `kind`-tagged files** (§4a), cross-referenced by
+      id — never folded together.
 - [ ] **Any deviation is a recorded, articulable constraint** — not "I wanted comments."
