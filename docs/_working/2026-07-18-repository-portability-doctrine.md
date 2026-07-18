@@ -31,8 +31,8 @@ off-machine coupling: a consumer depends on a **published, versioned interface**
 coordinate, not on a producer's working tree.
 
 The worked example throughout is **CommonTongue and its consumers** — a shared contract repository
-that DeckLibre, CameraConductor, and LiteController all build against. The pattern is not
-CommonTongue's; the example is. Any repository that another repository depends on has the same
+that DeckLibre, CameraConductor, and LiteController are all meant to build against. The pattern is
+not CommonTongue's; the example is. Any repository that another repository depends on has the same
 choice to make.
 
 ---
@@ -107,11 +107,14 @@ you have hardcoded a disk-layout assumption.
 
 > **Ecosystem:** DeckLibre's Cargo workspace couples only to its **own** crates
 > (`crates/decklibre-*`) — all within-repo, so it survived the flat→org-dir move untouched.
-> CameraConductor's `commontongue = { path = "../CommonTongue/rust" }` did not: `..` climbs out of
-> `CameraConductor` expecting `CommonTongue` next door, and after the move `CommonTongue` lives under
-> a *different* organisation directory entirely. The path was correct under the flat layout and
-> wrong under the org-dir layout, with no edit in between — the definition of a coupling that was
-> never really a dependency, just a coincidence.
+> **CommonTongue's README recommends the opposite:** its stated consumption model is
+> `commontongue = { path = "../CommonTongue/rust" }` (and `"commontongue": "file:../CommonTongue/ts"`
+> for the TS side) — a boundary-crossing `..` that expects CommonTongue next door. That advice was
+> correct under the flat layout and is wrong under the org-dir layout, with no edit in between: a
+> consumer under `StudioEnsemble/` that follows it resolves `../CommonTongue/rust` to a sibling that
+> isn't there, because CommonTongue now lives under `CommonPractices/`. The shared repo has
+> institutionalised a coupling that was never really a dependency — just a coincidence of where the
+> folders sat.
 
 ---
 
@@ -128,11 +131,13 @@ outside. The local `~/repositories/<Org>/<repo>` convention (§5) is a **conveni
 tooling on one machine** — it is never the thing a committed artifact couples to, precisely because
 the artifact travels to places the convention doesn't reach.
 
-> **Ecosystem:** CommonTongue is consumed by three products in two organisations. None of them can
-> address it by a path, because "next to CameraConductor" is not a place that exists in
-> LiteController's CI runner. They all address it by the same identity coordinate — and that is
-> exactly what lets it be published, versioned, and depended on the way the Interface Stability
-> Doctrine requires.
+> **Ecosystem:** CommonTongue is meant to be consumed across organisations — LiteController under
+> `StudioEnsemble/`, and others elsewhere. A path coupling cannot serve that: `../CommonTongue/rust`
+> is not a place that exists in LiteController's CI runner or in an outside contributor's clone. The
+> coordinate that *does* resolve there is an identity one — a published package version or a git ref
+> — which is also exactly what lets CommonTongue be published, versioned, and depended on the way the
+> Interface Stability Doctrine requires. That its README currently recommends the path form is the
+> gap this section names.
 
 ---
 
@@ -179,9 +184,12 @@ fires this doctrine's obligation:
 
 > **Ecosystem:** the flat→org-dir migration was exactly this trigger. DeckLibre needed **no** build
 > edits (all couplings within-repo), and its doc references to sibling repos already used canonical
-> names, so they survived. The `commontongue` path dependencies were the couplings the move exposed,
-> and converting them from `path = "../CommonTongue/rust"` to an identity coordinate is what makes
-> the next move a non-event.
+> names, so they survived. The couplings the move exposed are **CommonTongue's own consumption
+> model** — its README still recommends `path = "../CommonTongue/rust"` — and **LiteController's
+> spec**, which plans to adopt that same path form (already flagged ⚠️ there). Converting those to an
+> identity coordinate, before a consumer's manifest is written against the path, is what makes the
+> next move a non-event. (CameraConductor is still docs-only with no manifest, so it has nothing to
+> convert yet — the place to fix this is the recommendation, before it is copied into a build file.)
 
 ---
 
