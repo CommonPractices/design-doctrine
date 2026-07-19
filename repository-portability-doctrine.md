@@ -1,10 +1,5 @@
 # Repository-Portability Doctrine
 
-> **Status: DRAFT.** A working draft in `docs/_working/`; not yet part of the approved doctrine
-> set. It is promoted by moving it to the repo root under a stable, undated name when the owner
-> approves it ([Documentation Doctrine](../../documentation-doctrine.md) §3). *(This repo is flat —
-> approved doctrines live at the root, not under `docs/` — so promotion here targets the root.)*
-
 **Scope: cross-project.** How repositories address one another so that moving, renaming, or
 re-organising a checkout never breaks a build, a link, or a contributor's clone. A repository
 depends on *what* it needs — by a coordinate that resolves anywhere — never on *where that thing
@@ -21,12 +16,12 @@ nobody ever moves anything. The first time the checkout is re-organised, every p
 tree is silently wrong at once.
 
 **This doctrine composes existing ones and restates none of them.** It is the physical-layout
-companion to the [Single-Source-of-Truth Doctrine](2026-07-17-single-source-of-truth-doctrine.md):
+companion to the [Single-Source-of-Truth Doctrine](docs/_working/2026-07-17-single-source-of-truth-doctrine.md):
 a repository's identity has **one home**, and its local path is *derived* from that identity, never
-a second truth that can drift. It extends the [Conventions Doctrine](../../conventions-doctrine.md)'s
+a second truth that can drift. It extends the [Conventions Doctrine](conventions-doctrine.md)'s
 rule — *resolve a location from its convention, never hardcode a home path* — from a program's OS
 config directory to a repository's inter-repo couplings. And it leans on the
-[Interface Stability Doctrine](../../interface-stability-doctrine.md) for the *how* of an
+[Interface Stability Doctrine](interface-stability-doctrine.md) for the *how* of an
 off-machine coupling: a consumer depends on a **published, versioned interface** reached by a stable
 coordinate, not on a producer's working tree.
 
@@ -81,7 +76,7 @@ off this machine. Use it — never the checkout path.
 | **Doc / README link** | `../../CommonTongue/rust/README.md` | the repository's **URL** (`github.com/<Org>/CommonTongue`), or a within-repo relative link that never crosses a repo boundary |
 | **CI checkout** | assuming a sibling directory is present | an explicit **checkout of the named repository** at a pinned ref |
 
-The coordinate you pick is governed by the [Interface Stability Doctrine](../../interface-stability-doctrine.md):
+The coordinate you pick is governed by the [Interface Stability Doctrine](interface-stability-doctrine.md):
 you depend on a **version** of a published interface, so the producer can evolve without breaking
 you. A checkout path pins you to whatever is in someone's working tree *right now* — the opposite of
 a stable contract.
@@ -170,12 +165,12 @@ Its discipline is entirely local:
 
 Moving a repository — a flat layout into org directories, one org into another, a rename — is the
 event that separates a real dependency from a coincidental one. It is a high-cascade trigger in the
-[Single-Source-of-Truth Doctrine](2026-07-17-single-source-of-truth-doctrine.md) §8 sense, and it
+[Single-Source-of-Truth Doctrine](docs/_working/2026-07-17-single-source-of-truth-doctrine.md) §8 sense, and it
 fires this doctrine's obligation:
 
 - **Before a move, grep for the anti-pattern.** Search the tree for boundary-crossing path
   couplings — `../` hops in build files, `path =` / `file:` dependencies, cross-repo relative links —
-  because you cannot trust memory to enumerate them ([SSoT Doctrine](2026-07-17-single-source-of-truth-doctrine.md)
+  because you cannot trust memory to enumerate them ([SSoT Doctrine](docs/_working/2026-07-17-single-source-of-truth-doctrine.md)
   §6). Every hit is a coupling to convert from path to identity *before* the layout changes under it.
 - **A repository is portable when a move requires zero edits to it.** If relocating a checkout forces
   you to fix references inside a repository, those references were coupled to the layout, not to the
