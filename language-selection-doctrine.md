@@ -1,10 +1,5 @@
 # Language-Selection Doctrine
 
-> **Status: DRAFT.** A working draft in `docs/_working/`; not yet part of the approved doctrine
-> set. It is promoted by moving it to the repo root under a stable, undated name when the owner
-> approves it ([Documentation Doctrine](../../documentation-doctrine.md) §3). *(This repo is flat —
-> approved doctrines live at the root, not under `docs/` — so promotion here targets the root.)*
-
 **Scope: cross-project.** How a product lets a person choose their language — how it **detects** a
 first choice, **names** each language, **tags** it, **orders** the list, decides **when a language
 earns more than one entry**, and **applies** the choice far enough to take effect (handing off the
@@ -21,13 +16,13 @@ Arabic. The list must be legible *before* the choice is made, so each language c
 *findable* and being *lost in a list the user cannot parse.*
 
 **This doctrine composes existing ones and restates none of them.** Its accessibility floor is the
-[UI/UX Design Doctrine](../../ui-ux-design-doctrine.md)'s. It does **not** define the tag format — that
+[UI/UX Design Doctrine](ui-ux-design-doctrine.md)'s. It does **not** define the tag format — that
 is [BCP 47](https://www.rfc-editor.org/info/bcp47), adopted through the
-[Conventions Doctrine](../../conventions-doctrine.md), which is **supreme** on the point; language
+[Conventions Doctrine](conventions-doctrine.md), which is **supreme** on the point; language
 *matching* is [RFC 4647](https://www.rfc-editor.org/info/rfc4647); locale *data* (names, collation,
 formatting) is [CLDR](https://cldr.unicode.org/). The variant model borrows the single-inheritance
-chain of the [Device-Model Doctrine](../../device-model-doctrine.md); the rule for *when* two variants
-are the same language is the [SMT Doctrine](../../smt-doctrine.md)'s *sameness is earned, never
+chain of the [Device-Model Doctrine](device-model-doctrine.md); the rule for *when* two variants
+are the same language is the [SMT Doctrine](smt-doctrine.md)'s *sameness is earned, never
 assumed.*
 
 The worked example is **DeckLibre's language picker.** The pattern is not DeckLibre's; the example is.
@@ -80,7 +75,7 @@ stands; the widget choice is where you pay for it.
 Every language is identified by a **BCP 47 language tag** — `en-US`, `es-419`, `zh-Hant` — used
 **throughout**: the stored value, the `lang` attribute, the translation-set filename, the key in any
 map. This doctrine does not invent the format; it **defers** to the
-[Conventions Doctrine](../../conventions-doctrine.md), which is supreme here. BCP 47 is what every
+[Conventions Doctrine](conventions-doctrine.md), which is supreme here. BCP 47 is what every
 locale-aware tool already parses — the platform, `Intl`, CLDR, `gettext`, the HTML `lang` attribute —
 so a private, region-first, or underscore spelling (`us_en`) is exactly the deviation that doctrine
 forbids.
@@ -107,7 +102,7 @@ make the *tag* the primary label. When both appear, a single consistent separato
 
 A regional or script variant is not a second, independent translation. It is a **diff over a base
 language**, exactly the single-inheritance chain of the
-[Device-Model Doctrine](../../device-model-doctrine.md): a base carries the whole string set; a variant
+[Device-Model Doctrine](device-model-doctrine.md): a base carries the whole string set; a variant
 **inherits** it and **overrides only what genuinely differs**. A variant is never a full copy — a copy
 drifts (SMT Doctrine); an overlay cannot.
 
@@ -134,7 +129,7 @@ Consequences to state, not leave implicit:
 
 Two variants are the **same language** until a genuine difference is shown; never split on the
 assumption that a different country — or a different script — automatically means a different entry.
-This is the [SMT Doctrine](../../smt-doctrine.md)'s *sameness is earned on verified difference, not
+This is the [SMT Doctrine](smt-doctrine.md)'s *sameness is earned on verified difference, not
 assumed from resemblance.*
 
 The split axis is **region or script:**
