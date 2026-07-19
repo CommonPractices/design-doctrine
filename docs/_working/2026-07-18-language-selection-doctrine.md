@@ -6,11 +6,12 @@
 > approved doctrines live at the root, not under `docs/` — so promotion here targets the root.)*
 
 **Scope: cross-project.** How a product lets a person choose their language — how it **detects** a
-first choice, **names** each language, **tags** it, **orders** the list, and decides **when a language
-earns more than one entry.** This is deliberately *not* the whole of localization: translation itself,
-plural rules (ICU MessageFormat / CLDR plural categories), grammatical gender, and message formatting
-are a separate concern, out of band here. This doctrine governs the **chooser**, not the strings it
-chooses between.
+first choice, **names** each language, **tags** it, **orders** the list, decides **when a language
+earns more than one entry**, and **applies** the choice far enough to take effect (handing off the
+document's language and direction). This is deliberately *not* the whole of localization: translation
+itself, plural rules (ICU MessageFormat / CLDR plural categories), grammatical gender, and message
+formatting are out of band here. This doctrine governs the **chooser** and that **handoff**, not the
+strings it chooses between.
 
 A language chooser written in the interface's *current* language has a bootstrap problem: the person
 most in need of it — someone who cannot read the current language — is exactly the person who cannot
@@ -54,7 +55,8 @@ carry the markup assistive tech needs.
   screen reader switches to the right voice instead of spelling `日本語` out in the current language, and
   its **direction** so a right-to-left autonym (`العربية`, `עברית`) lays out correctly inside an
   otherwise left-to-right list. Isolate mixed-direction items (`<bdi>`, `unicode-bidi: isolate`) so an
-  RTL name cannot reorder the text around it.
+  RTL name cannot reorder the text around it. (Direction is resolved from the language wherever it
+  renders — including the whole interface once a language is chosen, §7.)
 - **Its own script, never transliterated.** `العربية`, not "al-ʿArabiyyah"; `中文`, not "Zhōngwén". A
   transliteration is the current-language label in disguise, and it fails the §0 reader for the same
   reason a translation does.
@@ -96,7 +98,8 @@ allowed only on the two conditions the Conventions Doctrine's deviation rule dem
 alone must be sufficient** to choose (the tag is additive, never the thing the user must parse), and
 where tag and name could ever diverge, **the tag is authoritative** — never bent to read tidily. A
 project may keep the tag out of the default view, behind its Advanced surface; what it must not do is
-make the *tag* the primary label.
+make the *tag* the primary label. When both appear, a single consistent separator is used throughout
+(`en-US — English (United States)`).
 
 ---
 
@@ -138,7 +141,7 @@ The split axis is **region or script:**
 
 - **Region** — Latin-American vs Iberian Spanish, France vs Canadian French.
 - **Script** — Simplified vs Traditional Chinese, Latin vs Cyrillic Serbian. This is not an edge case:
-  the most common non-region split is by script, and BCP 47 carries it in the **script subtag**
+  a major non-region split is by script, and BCP 47 carries it in the **script subtag**
   (`zh-Hans`/`zh-Hant`, `sr-Latn`/`sr-Cyrl`), not the region.
 
 **What counts as a real difference** is a difference in the **rendered strings** — spelling
@@ -188,7 +191,26 @@ multi-script list is still lost.
 
 ---
 
-## 7. Checklist
+## 7. Applying the choice — hand off the document's language and direction
+
+Selecting a language is not finished when the picker closes; the choice has to *take effect.* The full
+re-render — refetching strings, reformatting dates and numbers — is the localization work this doctrine
+leaves out of band. But two handoffs are the chooser's own responsibility, because without them the
+choice does not apply at all:
+
+- **Set the document's language.** Update `<html lang>` (or the platform equivalent) to the chosen
+  BCP 47 tag, so assistive tech reads the *whole* interface in the new language — §1's rule applied to
+  the page, not just one list item.
+- **Set direction from the language, everywhere.** Choosing a right-to-left language (`ar`, `he`, `fa`,
+  `ur`) flips the **entire** interface — layout, not just text alignment, and not just the picker:
+  update `<html dir>` to the language's resolved direction. Direction is a property of the chosen
+  language, never a standing assumption that the world reads left-to-right.
+- **Announce the switch.** A language change is a context change; make it perceivable (a live-region
+  message or a deliberate focus move), not a silent repaint.
+
+---
+
+## 8. Checklist
 
 Before shipping a language chooser, and before adding a language or a variant:
 
@@ -209,3 +231,5 @@ Before shipping a language chooser, and before adding a language or a variant:
 - [ ] The first language is **detected and matched** (RFC 4647 + CLDR containment), not defaulted
       blindly; the picker is the override (§5).
 - [ ] The list **surfaces likely languages first** and collates the rest by the current locale (§6).
+- [ ] Applying a choice sets the document's **`lang`** to the chosen tag and its **direction** from the
+      language — the whole interface, not just the picker — and the change is **announced** (§7).
