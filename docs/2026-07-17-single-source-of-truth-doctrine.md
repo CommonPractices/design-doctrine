@@ -1,6 +1,6 @@
 # Single-Source-of-Truth Doctrine
 
-> **Status: DRAFT.** A working draft in `docs/_working/`; not yet part of the approved doctrine
+> **Status: DRAFT.** A working, rapidly-evolving draft; not yet part of the approved doctrine
 > set. It is promoted by moving it to the repo root under a stable, undated name when the owner
 > approves it ([Documentation Doctrine](../../documentation-doctrine.md) §3). *(This repo is flat —
 > approved doctrines live at the root, not under `docs/` — so promotion here targets the root.)*
