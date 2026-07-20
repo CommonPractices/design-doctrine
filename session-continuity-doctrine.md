@@ -74,6 +74,20 @@ placed where it is read *first* on resume, before any status. Its properties:
   replaced. Mark it explicitly as a do-not-drop standing block.
 - **It is framed by decision moment, not by topic.** "Before saying done → re-read X" beats
   "testing: see X," because the trigger is the instant the law is about to be broken.
+- **The doctrines named above are illustrative, not the whole set.** When you build or
+  refresh a block, cross-check it against the *full* law index (README precedence + every
+  cardinal doctrine), not just the examples listed here. The recurring failure is exactly
+  that a hand-picked enumeration silently becomes the exhaustive checklist, so a law that
+  belongs in the block but is missing from the example list stays missing. Consult the
+  source of laws; never copy an example set and assume it complete.
+- **The block MUST include the anti-assumption pointer.** "Before stating any fact about a
+  repo / file / device / system state → have I read it *this session*? On disk and unread →
+  read before asserting; never restate an inference as the other party's words; a flagged
+  unknown is a stop sign, not a licence to proceed" → [Verification Doctrine §4](verification-doctrine.md).
+  This law fires *earliest* on a resume — an agent starts asserting repo/file state before
+  it has fully re-read the block — and its omission from a block has already caused a real
+  failure (an agent invented a repo's state with the repo readable on disk). It is the one
+  pointer a block is most likely to be missing and least able to afford missing.
 
 > The point is not the words in the block — those are pointers that can go stale and must be
 > kept current like any reference (SSoT §5). The point is that the **guaranteed-read document

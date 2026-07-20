@@ -85,7 +85,7 @@ visible outcomes** (opposite-direction controls; sentinels; assert the target is
 already in the desired state). A test that only proves "something changed" cannot tell
 success from the wrong success.
 
-## 4. Say what you measured, never what you assumed
+## 4. Say what you measured, never what you assumed — on outputs *and* inputs
 
 Report verification in terms of the **actual observation**, not the intention.
 
@@ -97,6 +97,30 @@ Report verification in terms of the **actual observation**, not the intention.
 If a step was skipped, say so. If something is claimed-but-unverified, mark it that way.
 A confident false "done" costs more than an honest "here's what I checked and what I
 didn't."
+
+**The same rule governs the *premises you reason from*, not only the claims you report.**
+An assumed premise is more dangerous than an assumed report, because it silently corrupts
+every conclusion drawn from it and is invisible by the time the conclusion is stated.
+
+- **State a fact about a repo / file / device / system state only from what you actually
+  read this session.** If it is on disk (or otherwise cheaply checkable) and you have not
+  opened it, **read it before you assert** — never describe it from memory or inference
+  when the real thing is one command away. An absence-claim ("there is no X", "we have
+  nothing to Y") is a factual claim and needs the same evidence bar as a presence-claim;
+  check before asserting a lack.
+- **Never restate an inference as the other party's words.** "You're saying X can't work"
+  when they never said it launders your guess into their statement — the worst form,
+  because it hides the assumption inside apparent agreement.
+- **Naming an uncertainty is not closing it.** A flagged unknown ("I'm not sure which repo
+  this is") is a **stop sign**, not a disclaimer that licenses proceeding on a guess.
+  Resolve it — read, or ask — before reasoning past it.
+
+> **The failure this answers (2026-07-20).** Asked to compare two build orders, an agent
+> invented "the LiteController hardware doesn't exist," reasoned a whole recommendation
+> from it, and restated it as the user's own premise — while the LiteController repo sat
+> readable on disk, one `ls` away. The measured-not-assumed rule already existed for
+> *reports*; it was not being applied to the *premises* the reasoning stood on. Same rule,
+> one step earlier.
 
 ## 5. External / physical outcomes need an external witness
 
@@ -118,6 +142,10 @@ instrument confirms), and never let "command sent" stand in for "outcome achieve
       ideally a re-runnable harness.
 - [ ] **Negative control.** The failure was reproduced first; the fix was reverted and
       seen to fail with the right message before being re-applied.
+- [ ] **Honest premises.** Every fact the reasoning stands on about a repo / file / device
+      / system state was *read this session*, not assumed — anything on disk and unread was
+      opened first; no inference restated as the other party's words; every flagged unknown
+      resolved (read or asked), not reasoned past.
 - [ ] **Honest report.** Stated what was *measured*, not assumed; skipped/unverified parts
       named as such; external outcomes witnessed, not inferred from "sent."
 
