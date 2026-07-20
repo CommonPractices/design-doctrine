@@ -1,4 +1,4 @@
-# Session-Continuity (Handoff) Doctrine (DRAFT)
+# Session-Continuity (Handoff) Doctrine
 
 **Scope: cross-project.** How an agent's work survives the end of its context — a
 compaction, a resume, a fresh session picking up where the last stopped — so that
@@ -21,10 +21,10 @@ doctrine — the belt — and the handoff itself names the laws, so continuity h
 hook does not. This is one of the rare cases where redundant enforcement is justified: the
 cost of the handoff not reloading is a whole session's context and every law lost with it.
 
-**Cross-references.** Composes the [Single-Source-of-Truth Doctrine](../../single-source-of-truth-doctrine.md)
+**Cross-references.** Composes the [Single-Source-of-Truth Doctrine](single-source-of-truth-doctrine.md)
 (the handoff is the **ephemeral tier** — session state — and it **references** the canonical
-laws, never copies them) and the [Verification Doctrine](../../verification-doctrine.md) +
-[README ⭐ Precedence rule](../../README.md) (the laws the standing block points at). It does
+laws, never copies them) and the [Verification Doctrine](verification-doctrine.md) +
+[README ⭐ Precedence rule](README.md) (the laws the standing block points at). It does
 **not** restate any of them. Machine-specific mechanics (exact file location, when the hook
 fires, the named-session gate) live in the agent's own config (`CLAUDE.md`) and are
 **referenced, not duplicated** here.
@@ -56,7 +56,7 @@ What "resume cold" requires (the state half):
 - **Files / branches / commits** — paths, branch, hashes; any live infra touched.
 - **Open decisions / blockers** — unresolved questions and pending approval gates.
 - **Verification state** — what is tested-and-confirmed vs. claimed-but-unverified
-  (per the [Verification Doctrine](../../verification-doctrine.md) — the handoff must not
+  (per the [Verification Doctrine](verification-doctrine.md) — the handoff must not
   launder an unattacked claim into "done").
 
 ## 2. The standing-law block — the belt
