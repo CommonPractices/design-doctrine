@@ -1,4 +1,4 @@
-# Verification Doctrine (DRAFT)
+# Verification Doctrine
 
 **Scope: cross-project.** What the word **"tested"** is allowed to mean, and the gate a
 change must pass before anyone — human or agent — may call it done, verified, or working.
@@ -14,7 +14,7 @@ missing — it was not run.** So this doctrine's job is not a new idea; it is to
 existing idea a **gate that blocks the word "done,"** not advice one can skip.
 
 **Cross-references.** This is the everyday, every-change companion to the
-[Cold-Start Acceptance Doctrine](2026-07-19-cold-start-acceptance-doctrine.md) (that one
+[Cold-Start Acceptance Doctrine](cold-start-acceptance-doctrine.md) (that one
 is the whole-system run; this one governs the claim on any change). It restates the
 README's load-bearing rule at the level of *verification* and does not duplicate the
 acceptance doctrine's phase mechanics.

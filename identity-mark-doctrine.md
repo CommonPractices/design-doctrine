@@ -4,7 +4,7 @@
 that image must be.**
 
 This governs the small square **identity marks** — the avatars GitHub shows for an org and for
-a repo. It is a sibling to [`visual-identity.md`](../../visual-identity.md), not a part of it:
+a repo. It is a sibling to [`visual-identity.md`](visual-identity.md), not a part of it:
 visual-identity governs how an *application's UI* is built (themes, tokens, personas,
 accessibility); this governs the *brand marks* that stand in for an org or repo. Two different
 concerns, two different homes. On any overlap, the North Stars are shared —
@@ -104,7 +104,7 @@ manual step.** Committing the file does *not* change what GitHub shows. Do not r
 
 A repo **added / renamed / retired** takes its mark with it, in the same change set that touches
 the repo — same discipline as keeping the org README current
-([`../../README`-currency rule in the family CLAUDE]). A repo whose purpose changes enough that
+([`README`-currency rule in the family CLAUDE]). A repo whose purpose changes enough that
 its object no longer fits gets a new mark; don't leave a clock on a repo that stopped being about
 time.
 

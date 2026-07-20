@@ -2,7 +2,7 @@
 
 **Scope: cross-project.** How to write and publish documentation **for the people who
 use the product** — as opposed to where any document lives on disk (that is the
-[Documentation Doctrine](../../documentation-doctrine.md)) or how the decision record
+[Documentation Doctrine](documentation-doctrine.md)) or how the decision record
 stays trustworthy. This doctrine is about the reader who has the tool in front of them
 and needs to make it work.
 
@@ -11,9 +11,9 @@ because leaving it unwritten produced a real gap — a doc that assumed knowledg
 reader didn't have, drifted from the code, or lived in one place when the reader
 looked in another.
 
-**Cross-references.** Composes with the [Documentation Doctrine](../../documentation-doctrine.md)
+**Cross-references.** Composes with the [Documentation Doctrine](documentation-doctrine.md)
 (where docs live: `docs/` approved vs `docs/_working/` drafts; live runtime docs stay
-in the tree) and the [Spec-Promotion Doctrine](../../spec-promotion-doctrine.md)
+in the tree) and the [Spec-Promotion Doctrine](spec-promotion-doctrine.md)
 (owner-gated promotion). It does **not** restate them.
 
 ---

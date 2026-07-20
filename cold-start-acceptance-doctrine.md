@@ -10,11 +10,11 @@ Principles portable, examples concrete. This doctrine exists because a suite tha
 starts from state the developer happens to have **passes on a product a new user
 cannot even start**. Every rule below closed a real gap.
 
-**Cross-references.** Deeply related to the [Held-Out-Oracle Doctrine](../../held-out-oracle-doctrine.md)
+**Cross-references.** Deeply related to the [Held-Out-Oracle Doctrine](held-out-oracle-doctrine.md)
 — both say *do not evaluate from the state that hides the failure*. That one holds a
 reference instance **out of a model's construction**; this one holds **known
 device/app state out of an acceptance run**. Composes with the
-[Service-Foundations Doctrine](../../service-foundations-doctrine.md) (what a service
+[Service-Foundations Doctrine](service-foundations-doctrine.md) (what a service
 must survive). It restates neither.
 
 ---
