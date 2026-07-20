@@ -1,10 +1,5 @@
 # Single-Source-of-Truth Doctrine
 
-> **Status: DRAFT.** A working, rapidly-evolving draft; not yet part of the approved doctrine
-> set. It is promoted by moving it to the repo root under a stable, undated name when the owner
-> approves it ([Documentation Doctrine](../../documentation-doctrine.md) §3). *(This repo is flat —
-> approved doctrines live at the root, not under `docs/` — so promotion here targets the root.)*
-
 **Scope: cross-project.** How the written record of a multi-project, multi-org ecosystem stays
 trustworthy as it grows: every fact has exactly one home, everywhere else points at that home, and
 a fact lives at the highest altitude where it is true.
@@ -21,12 +16,12 @@ ecosystem — a universal doctrine repository, product-family orgs, and the prod
 pattern is not that ecosystem's; the example is.
 
 **This doctrine composes existing ones and restates none of them.** It borrows the placement rule
-from the [Device-Model Doctrine](../../device-model-doctrine.md) §0 (a fact lives at the highest
+from the [Device-Model Doctrine](device-model-doctrine.md) §0 (a fact lives at the highest
 tier where it is true) and applies it to the record instead of to hardware; it relies on the
-[Documentation Doctrine](../../documentation-doctrine.md) for approved-vs-working state and *nothing
-self-promotes*, and on the [Decision Doctrine](../../decision-doctrine.md) for *only the owner
+[Documentation Doctrine](documentation-doctrine.md) for approved-vs-working state and *nothing
+self-promotes*, and on the [Decision Doctrine](decision-doctrine.md) for *only the owner
 promotes*. It governs the **record** — doctrine, specs, decisions, docs. It is **not** the
-[WS-Control Doctrine](../../ws-control-doctrine.md) §0 sense of "single source of truth," which is
+[WS-Control Doctrine](ws-control-doctrine.md) §0 sense of "single source of truth," which is
 about a running service owning live device state; that is the same idea in a different domain, and
 the two do not overlap.
 
@@ -87,7 +82,7 @@ making a visible, deliberate exception, not quietly forking the truth.
 
 ## 3. Write each rule at the highest altitude where it is true
 
-This is the [Device-Model Doctrine](../../device-model-doctrine.md) §0 rule applied to the record
+This is the [Device-Model Doctrine](device-model-doctrine.md) §0 rule applied to the record
 rather than to device facts — so this section **references it and does not restate it**, which is
 the doctrine obeying itself. One parent, the nearest honest ancestor.
 
@@ -113,7 +108,7 @@ actually true.
 Surfacing is a single motion that satisfies §1: **move the source of truth up a tier, and convert
 the product's copy into a reference.** After it, the fact has one home again — higher — and the
 product points at it. The owner performs the promotion; **nothing self-promotes** ([Documentation
-Doctrine](../../documentation-doctrine.md) §3, §8). The active discipline is one question asked at
+Doctrine](documentation-doctrine.md) §3, §8). The active discipline is one question asked at
 every product-level decision: *is this true only here, or family-wide, or universal?*
 
 This is the missing inverse of §3. Section 3 says where a fact belongs once you know its scope;
@@ -189,7 +184,7 @@ first:
 - **A product joining or leaving a family** — the org-tier facts it now inherits, or no longer does.
 - **A value or North-Star change** — it is referenced at every altitude.
 - **A contract version bump** — every dependent that names the version.
-- **A superseding decision** — this extends the [Decision Doctrine](../../decision-doctrine.md)'s
+- **A superseding decision** — this extends the [Decision Doctrine](decision-doctrine.md)'s
   *reopen loudly* from within one repo to **across repos and orgs**: a decision that supersedes one
   at another altitude must strike the old one *and* update everything that referenced it.
 

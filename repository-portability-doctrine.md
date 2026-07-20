@@ -17,7 +17,7 @@ dependency: it holds only as long as nobody moves anything, and the first time t
 re-organised, every position-relative coupling in the tree is silently wrong at once.
 
 **This doctrine composes existing ones and restates none of them.** It is the physical-layout
-companion to the [Single-Source-of-Truth Doctrine](docs/_working/2026-07-17-single-source-of-truth-doctrine.md):
+companion to the [Single-Source-of-Truth Doctrine](single-source-of-truth-doctrine.md):
 a repository's identity has **one home**, and its local path is *derived* from that identity, never
 a second truth that can drift. It extends the [Conventions Doctrine](conventions-doctrine.md)'s
 rule — *resolve a location from its convention, never hardcode a home path* — from a program's OS
@@ -186,12 +186,12 @@ Its discipline is entirely local:
 
 Moving a repository — a flat layout into org directories, one org into another, a rename — is the
 event that separates a real dependency from a coincidental one. It is a high-cascade trigger in the
-[Single-Source-of-Truth Doctrine](docs/_working/2026-07-17-single-source-of-truth-doctrine.md) §8 sense, and it
+[Single-Source-of-Truth Doctrine](single-source-of-truth-doctrine.md) §8 sense, and it
 fires this doctrine's obligation:
 
 - **Before a move, grep for every cross-boundary path.** Search the tree for `../` hops in build
   files, `path =` / `file:` dependencies, and cross-repo relative links — you cannot trust memory to
-  enumerate them ([SSoT Doctrine](docs/_working/2026-07-17-single-source-of-truth-doctrine.md) §6).
+  enumerate them ([SSoT Doctrine](single-source-of-truth-doctrine.md) §6).
   Each hit is one of two things: a coupling that should have been **remote** (a published dependency
   named by a path — convert it), or a **pre-remote local** coupling (§2) whose path must be
   **re-derived** for the new layout. Either way it is handled *before* the layout changes under it.
