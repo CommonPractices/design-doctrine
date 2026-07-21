@@ -103,10 +103,16 @@ pattern to be made portable.
 doctrine, but the concrete context a portable rule is eventually distilled *from*. They live here
 deliberately: a lesson learned the expensive way on one project is where the next cross-project doctrine
 often starts, and the project context (what was measured, on what build, why it mattered) is load-bearing
-and worth keeping close to the doctrine it may feed. Current entries come from **medit** (a native macOS
-text editor) — a main-thread performance pass: [`medit-perf-findings.md`](lessons-learned/medit-perf-findings.md)
-(the numbers) and [`medit-perf-lessons-learned.md`](lessons-learned/medit-perf-lessons-learned.md) (what to
-carry forward).
+and worth keeping close to the doctrine it may feed. Current entries:
+
+- **medit** (a native macOS text editor) — a main-thread performance pass:
+  [`medit-perf-findings.md`](lessons-learned/medit-perf-findings.md) (the numbers) and
+  [`medit-perf-lessons-learned.md`](lessons-learned/medit-perf-lessons-learned.md) (what to carry forward).
+- **LiteController** (a headless lighting-control service) — the `litectl --direct` direct-BLE CLI build:
+  [`litecontroller-direct-cli-lessons-learned.md`](lessons-learned/litecontroller-direct-cli-lessons-learned.md).
+  Unusually generative — several of *this repo's* cross-project doctrines (Verification, Secrets &
+  Credentials, Held-Out-Oracle, Naming-Shape §6, Network-Allocation, Session-Continuity) were distilled
+  from these expensive lessons, and the entry back-links each one to the failure that motivated it.
 
 ## North Stars — a decision framework
 
