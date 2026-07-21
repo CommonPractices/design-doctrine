@@ -31,7 +31,7 @@ A mark is **one recognizable object, drawn white on a solid field**, that reads 
 | **Form** | A single **literal object** grounded in what the thing *is* — a key grid for a deck controller, an aperture for a camera service, a clock+chip for an RTC library. Not an abstract squiggle, not a monogram, not a metaphor that needs explaining. |
 | **Foreground** | **White** (`#FFFFFF`) only. High contrast against the field, no second colour. |
 | **Field (background)** | A **flat, solid** colour. No gradients on generated marks (a genuine app icon that already ships a gradient is the exception — §5). |
-| **Format** | **512×512 PNG**, full-bleed square (GitHub applies its own rounding — never pre-round, or the corners double-clip). Plus an **SVG source** where the mark was authored as vector. |
+| **Format** | **512×512 PNG**, **full-bleed hard square** — no `rx`, no clip, no pre-rounding of any kind (GitHub applies its own display rounding; pre-rounding double-clips the corners). Every family mark on disk is a plain 512 square — match that; do not model or pre-empt GitHub's display shape. Plus an **SVG source** where the mark was authored as vector. |
 | **Legibility floor** | **Must read at 40 px.** That is the size GitHub actually displays. Few elements, thick strokes, no fine detail. A mark that only works at 512 is a failed mark. |
 
 **Accessibility is the reason for every one of these.** White-on-solid is maximum luminance
@@ -48,6 +48,15 @@ separation; a single object survives shrinking; colour is never the only signal 
   field, different glyph.
 - The org colour is a fixed fact for that org; record it where the org's decisions live and
   reference it — never re-pick it per repo.
+- **Keep a maintained org-colour registry — do not reverse-engineer it from the marks.** The set
+  of "which org owns which colour" is itself a fact with one home (the org decision record, e.g.
+  the topology memory), listed explicitly. If the only place the colours live is inside the
+  committed `avatar.svg` files, then picking a *new* org's colour means reading every existing
+  mark to avoid a collision — and the collision the whole rule exists to prevent slips through the
+  first time someone skips that read. The registry is the list; the marks are its application, not
+  its source of truth. *(This was learned the expensive way: the registry existed only implicitly
+  in the marks, and a near-colliding colour was nearly chosen before the six taken hues were
+  reverse-engineered out of the SVGs.)*
 
 > A visitor should be able to tell, from the colour alone, which org a repo belongs to — and
 > from the glyph, which repo it is.
@@ -71,6 +80,15 @@ the source is where the code is — not stranded in a central asset repo.
 - **Design from the source, not the summary.** Read the repo's actual README/manifest/code
   before drawing. A stale one-line description produces a wrong mark. (Design a mark for a repo
   you called a "skeleton" that is actually a shipping product, and the mark lies.)
+- **Research the GLYPH GEOMETRY — don't hand-author the shape from imagination.** Getting the
+  *subject* right (a satellite dish) is not the same as getting the *shape* right; a
+  hand-invented "dish" came out reading as a stick figure. Before drawing an object, study how a
+  professional icon set already draws it (the family keeps a large on-disk glyph corpus for
+  exactly this), and adapt that geometry rather than guessing at arcs and strokes. And **verify
+  the render at 40 px before proposing it** — render it, look at it small; a shape that reads at
+  512 but collapses into "a wand" or "goggles" or "a pie chart" at 40 px has failed the
+  legibility floor (§2), and only rendering catches it. *(Learned the expensive way: four
+  hand-drawn glyphs read as the wrong object at 40 px before the real icon geometry was used.)*
 - **If the thing already has a real, designed icon, use it — do not invent a duplicate.** A
   native app that ships an app icon *is* its identity; its avatar is that icon, not a
   hand-drawn stand-in. When an existing icon's own background differs from the org field
