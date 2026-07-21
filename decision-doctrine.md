@@ -290,6 +290,16 @@ agreed. Conventions erode; constructions don't.
 **The best decisions delete problems instead of solving them.** When a proposal makes a hard
 question *moot* rather than answered, that is a strong signal it's right.
 
+**The bound: this is a floor for expensive invariants, not a mandate for every rule.**
+Construction has a cost, and it must be proportionate to what the violation costs — a guard
+that costs more than the mistake is itself a defect, and a guard the bound party *cannot
+satisfy* doesn't prevent the mistake, it relocates the work onto someone else. Before
+constructing, run [Enforcement-Altitude Doctrine](enforcement-altitude-doctrine.md): price the
+violation (cost × reversibility × discoverability), check the guard is payable by the party it
+binds, and prefer a written rule where the actor already holds the fact. *"If a rule matters,
+make it impossible to violate"* answers **how** to protect an expensive invariant; it does not
+answer **whether** this rule is one.
+
 ---
 
 ## 8. Record every decision, and record what is NOT decided
@@ -365,3 +375,50 @@ see the problem and you can only see your framing of it.
 > *false trichotomy*, and a menu is a bad instrument for an open design space.
 >
 > **When the answer space is genuinely open, ask an open question.**
+
+---
+
+## 11. The four lenses — run a decision through all of them
+
+§1 gives you **one** lens: the project's ordered values. It is the first and the most
+project-specific, but it is not sufficient alone — values tell you *what to serve*, not
+whether the thing you built is shaped right, done the way the industry does it, or actually
+true. A non-trivial decision is evaluated against **four distinct lenses**, collectively the
+**Prime Directives (`PD`)**:
+
+| # | Lens | Asks |
+|---|---|---|
+| 1 | **North Stars (NS)** | Does it serve the project's ordered values? *(§1 — each project fills in its own.)* |
+| 2 | **Blueprints (BP)** | Does it fit the relevant product-**shape** blueprint — or is a blueprint even the right shape here? |
+| 3 | **Best Practices** | Is it the idiomatic, conventional, correct-*way* answer — industry / by convention / de facto / current conventional wisdom? |
+| 4 | **Correctness** | Is it actually *true* — does it hold, including single-source-of-truth for the record? |
+
+**Do not collapse any lens into another.** They routinely disagree, and the disagreement is
+the value: a decision that satisfies the North Stars can still be the wrong *shape*
+(BP), built in a non-idiomatic way (Best Practices), or resting on a claim that isn't true
+(Correctness). Collapsing two lenses hides exactly the conflict you needed to see.
+
+**`BP` means Blueprints. `BP` never means Best Practices.** These are two different lenses
+that unfortunately share initials, and conflating them silently deletes one of the four.
+Blueprints are the SHAPES layer (`CommonPractices/blueprints/` — what form a product of this
+kind takes); Best Practices is the idiomatic-craft lens. **Write "Best Practices" out in
+full; reserve the abbreviation `BP` for Blueprints.**
+
+### How to apply them
+
+- **Run the options through all four**, and **present the analysis WITH the recommendation** —
+  never backfilled after the choice is made. (This is §1's "analysis WITH the question" rule
+  generalized from one lens to four; the tell is identical.)
+- **Name the doctrine that owns each rule** you invoke, rather than asserting it freestanding.
+  A lens is a pointer to a body of rules, not a vibe.
+- **If a lens genuinely doesn't apply, say so explicitly** — "no blueprint governs this shape
+  yet" is a finding. Silently skipping a lens is indistinguishable from forgetting it, and
+  reads as a four-lens analysis while being a three-lens one.
+- **Additive-only / compatibility rules are their own doctrines** ([Interface
+  Stability](interface-stability-doctrine.md), [Forward-Compatible
+  Format](forward-compatible-format-doctrine.md)) — cite them **by name**. They are not folded
+  into "Blueprints" or "Best Practices."
+
+*"Run it through the PD"* / *"what do the Prime Directives say"* means exactly this: four
+lenses, analysis presented with the recommendation, each rule attributed to its owning
+doctrine.
