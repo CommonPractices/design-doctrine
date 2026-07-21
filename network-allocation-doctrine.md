@@ -151,7 +151,7 @@ These are the source of truth. An assignment exists when it is committed here.
 
 | Project (slug) | Main port | 290X? | Auxiliary (3129–3224) | Notes |
 |----------------|-----------|-------|-----------------------|-------|
-| _(none assigned yet)_ | | | | |
+| litecontroller | 2910 | no | — | The `litecontrollerd` northbound WS (CommonTongue `northbound.v1`). TCP+UDP. Debug surface uses an ephemeral port + `litecontroller-debug` mDNS (§1.2.2), not a fixed aux port. |
 
 *Assign the next free 2910–2939 sequentially; 290X owner-only; wrap to 2840–2899 on
 exhaustion. Every reservation is TCP+UDP.*
