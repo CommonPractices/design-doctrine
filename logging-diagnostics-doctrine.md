@@ -78,9 +78,20 @@ bypassing §4.
 ## 4. A secret never reaches a log — made structural
 
 Composes [Secrets & Credentials §0](secrets-credentials-doctrine.md). No secret, key, token,
-credential, or private-key material appears in any log line or published stream — **at any
-level, including `trace`, never.** `trace` is the *most* dangerous here (it dumps raw frames
+credential, or private-key material appears in any log line or published stream — **by default,
+at every level including `trace`.** `trace` is the *most* dangerous here (it dumps raw frames
 and payloads), so the rule binds hardest exactly where the temptation is highest.
+
+### 4.1 The one carve-out lives in the Debugging Doctrine
+
+Redaction is the **default at every level and every sink**, but it is not the *only* possible
+behaviour: a root-privileged diagnostic session sometimes must see a real secret to diagnose it
+("is the service even loading the right key?"). That single exception — **per-secret, explicit,
+and audited, never the default and never a wholesale off-switch** — is owned as a principle by
+the [Debugging Doctrine §4](debugging-doctrine.md), which governs the root diagnostic surface.
+This section does not restate it; it only records that the floor here has exactly one governed
+exception, and that its home is the Debugging Doctrine. Everywhere else, and by default
+everywhere, the floor is absolute.
 
 Advisory "remember not to log secrets" is a hope ([Single-Source-of-Truth §9](single-source-of-truth-doctrine.md)
 — an invariant you must remember is not one; [Decision Doctrine §7](decision-doctrine.md) —
@@ -104,9 +115,42 @@ Where the log file lives is a per-OS convention, owned by [Conventions Doctrine]
 macOS, `%LOCALAPPDATA%\<App>\Logs\` on Windows) and **documented** — a service says where its
 log is. Restated nowhere here.
 
+## 6. Remote sinks — shipping the log off the box
+
+The local file (§5) and the published WS stream (§1) are two sinks; a **remote log sink** is a
+third. A service **may** push its log stream to a remote server, **off by default**, configured
+through the family chain ([Service Foundations §1](service-foundations-doctrine.md) — CLI → env
+→ file → default). The shape:
+
+- **Emit a standard first.** The default remote form is an **industry-standard log protocol**
+  (syslog RFC 5424, or the OTLP structured-log family) so any existing aggregator — Loki, ELK,
+  Graylog, a plain `syslogd` — ingests it with no bespoke server. This is [Conventions §1](conventions-doctrine.md):
+  adopt the ecosystem's convention; a user already runs a log server and wants the logs *there*.
+  A family-specific logging/visualisation server is a permitted **later, additive** sink — it
+  may or may not adopt an industry shape — but it is *in addition to* the standard emitter,
+  never a replacement for it. The family ships an **emitter that speaks a standard sink**, not a
+  mandatory server.
+- **Push, not pull.** A log is a stream; the service ships lines to the configured remote
+  (syslog-style). Pull/scrape is a metrics idiom, not a logging one.
+- **Transport is selectable; TLS is the safe default.** Both **TCP+TLS** (ordered, encrypted —
+  the default, because the log leaves the box carrying operational detail even when redacted)
+  and **UDP** (classic, lossy, plaintext — for a trusted LAN or legacy syslog) are offered; the
+  operator picks per deployment through the config chain.
+- **Never block on the remote — buffer, then drop, and say so.** The remote sink is
+  **non-essential**: if it is down or slow, the service **does not block** (a dead log server
+  must never stall the product — [Service Foundations §2](service-foundations-doctrine.md)
+  spirit: a non-essential dependency's failure is loud, not fatal). Buffer to a **bounded**
+  buffer; when it fills, **drop oldest and emit a local warning**. The **local log stays
+  complete** regardless — nothing that matters is lost, because the local sink always has it.
+- **The §4 redaction floor binds the remote path — hardest of all.** A secret that slips
+  redaction is now on a server the operator may not control, so the remote sink is the
+  **highest-stakes** sink. Because §4 redacts **at the source**, a line is already `***` before
+  it reaches *any* sink — but the **verify-by-attack** for §4 must explicitly include the
+  remote path (assert a wrapped secret and a raw `trace` frame reach the remote as `***`).
+
 ---
 
-## 6. Checklist
+## 7. Checklist
 
 - [ ] **Loosely-parsed, human-oriented** (§1) — line text is not an API; machine logic reads
       state, not scraped lines; a published stream obeys the same rule.
@@ -114,6 +158,12 @@ log is. Restated nowhere here.
       invented); active level settable through the config chain, default `info`.
 - [ ] **No unguarded debug output in production source** (§3) — guarded or routed through
       `debug`/`trace`; unguarded is release-blocking.
-- [ ] **No secret in any log, structurally** (§4) — redaction boundary at the source; `trace`
-      frame dumps masked at the dump site; **verified by attack**.
+- [ ] **No secret in any log, structurally, by default** (§4) — redaction boundary at the
+      source; `trace` frame dumps masked at the dump site; **verified by attack**. The sole
+      exception (§4.1) is a root-privileged, **per-secret, explicit, audited** reveal — never a
+      default, never a wholesale off-switch.
 - [ ] **Log location follows the platform and is documented** (§5).
+- [ ] **Remote sink is standard-first, off by default, non-blocking** (§6) — emits a standard
+      protocol (syslog/OTLP) to any aggregator; TCP+TLS default / UDP optional; buffer-then-drop
+      + local warning, never blocks; local log stays complete; **§4 redaction verified on the
+      remote path**.
