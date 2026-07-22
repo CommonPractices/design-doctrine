@@ -103,6 +103,13 @@ Ordering the North Stars resolves the tension between *ease of use* (few fields)
 knobs): **the required set is tiny; everything else defaults; nothing display-facing is derived from
 a namespace.**
 
+> ⚠️ **This ordering is borrowed, not ratified — see §8.5.** The tiering below was derived by
+> reasoning from the SurfaceWorks family set (Accessibility · Ease-of-use · Speed · Choice).
+> [North Stars Doctrine §2.1](../../../north-stars-doctrine.md) forbids exactly that: a product
+> "does not silently inherit an unstated" set, and naming a family set by reference is permissible
+> "only as an explicit, ratified choice." The tiering may well survive ratification unchanged, but
+> **its stated basis is not yet legitimate.**
+
 **Required — 3 fields.** A minimum viable config is three lines.
 
 | Field | Example | Why |
@@ -220,11 +227,14 @@ not itself a git repository.)
 
 Run per [Decision Doctrine §11](../../../decision-doctrine.md).
 
-**Lens 1 — North Stars.** CommonPractices publishes no ordered North Stars of its own; DD's README
-presents the *framework* and uses CameraConductor's four as a worked example. **This lens is thin
-here, and is stated as thin rather than manufactured** — inventing a ranking to make the analysis
-look complete is the failure §11 warns about. What the family altitude stack does assert is that
-altitude separation is itself the organizing value; that argument is made under Correctness below.
+**Lens 1 — North Stars.** **CommonStage has no stated ordered set, so this lens cannot be run
+properly yet — stated as thin rather than manufactured**, since inventing a ranking to make the
+analysis look complete is the failure §11 warns about. The framework's home is now
+[North Stars Doctrine](../../../north-stars-doctrine.md) (formalized 2026-07-21, after this
+analysis was first written; Decision Doctrine §1 was slimmed to point at it). That doctrine's §2.1
+is why the gap cannot simply be closed by borrowing the family set — see §8.5. What the family
+altitude stack does assert is that altitude separation is itself the organizing value; that argument
+is made under Correctness below.
 
 **Lens 2 — Blueprints.** **No blueprint governs this shape.** Both existing blueprints are DRAFT and
 hardware/service-shaped. Per the [Blueprint Charter §5](../../../../CommonFraming/CHARTER.md), the
@@ -332,6 +342,35 @@ beacon and no client-side collector is introduced by the standard.
 
 What remains open is only the **deploy path** (Actions→rsync over a deploy key, a pull-based hook,
 or otherwise) — an implementation question for the plan, not a design question.
+
+### 8.5 CommonStage owes a stated ordered North Star set
+
+**CommonStage has no stated North Stars, and this design leaned on a borrowed set without saying
+so.** The §4.1 config tiering was derived from the SurfaceWorks family ordering (Accessibility ·
+Ease-of-use · Speed · Choice) — specifically the claim that *ease-of-use outranks choice*, which is
+what produced the tiny-required-set / everything-else-defaults shape.
+
+[North Stars Doctrine §2.1](../../../north-stars-doctrine.md) (formalized 2026-07-21) forbids this
+directly: a product "does not silently inherit an unstated" set, and naming a family set by
+reference rather than restating the values is permissible "**only as an explicit, ratified
+choice**… never as a default to dodge the work of choosing."
+
+**This is a gap, recorded rather than papered over.** The conclusions may survive ratification
+unchanged — CommonStage is a presentation-layer product and the family ordering may genuinely be
+right for it — but *"the ordering justifies the design"* is not a claim this spec is currently
+entitled to make.
+
+**What closing it requires** (per §3 of that doctrine, and owner-driven per §7 — the doctrine
+defines the framework, it does not invent any project's values):
+
+1. An ordered set of 3–5 values stated in CommonStage's own docs, citing the doctrine for the
+   framework.
+2. **Evidence each star is real** — where it *forced* an outcome. The §4.1 tiering and §4.2's
+   "no field may lower the accessibility floor" are both candidate evidence, if the set that ratifies
+   them is the one adopted.
+3. A dated, owner-ratified decision-log entry, so the set's provenance is greppable.
+
+Until then, §4.1's ⚠️ note stands and the ordering is marked borrowed.
 
 ---
 
