@@ -1,6 +1,6 @@
 # Handoff — CommonStage
 
-**Session:** CommonStage · **Updated:** 2026-07-21 · **Repo:** `CommonPractices/CommonMind`
+**Session:** CommonStage · **Updated:** 2026-07-22 · **Spec lives in:** `CommonPractices/CommonMind`
 
 ---
 
@@ -13,116 +13,135 @@ context boundary.
   CLAUDE.md *"A Fix Is Not A Fix Until The Test Fails Without It."* Watch it fail on the broken
   code; say what was **measured**, not assumed.
 - **Before ANY non-trivial design choice** → run the **Prime Directives (PD)** = four lenses:
-  **NS** (North Stars, ordered) + **BP = Blueprints** (SHAPES layer — say so if n/a) + **Best
-  Practices** (spelled out, never "BP") + **Correctness**. SSoT = `decision-doctrine.md §11`.
-  Analysis goes **WITH** the recommendation, never backfilled.
+  **NS** (North Stars) + **BP = Blueprints** (SHAPES layer — say so if n/a) + **Best Practices**
+  (spelled out, never "BP") + **Correctness**. SSoT = `decision-doctrine.md §11`; the NS framework's
+  home is now `north-stars-doctrine.md`. Analysis goes **WITH** the recommendation, never backfilled.
+  ⭐ **§5: a ranking says which star you may NOT LOSE, not which to sacrifice — don't trade, find the
+  construction that satisfies both.** (I violated this once; see §8a/§4.1.)
 - **Before stating ANY fact about a repo/file/branch/remote** → have I actually READ it *this
-  session*? On disk + unread → **READ it**. Do not describe from memory or inference.
+  session*? On disk + unread → **READ it.** Never describe from memory or inference. **A memory is
+  not evidence** — I asserted "DeckLibre is a SurfaceWorks product" from a stale MEMORY.md index
+  line and it was false.
 - **Before editing a doc that names a renamed thing** → `terminology-migration-doctrine.md` §5
-  ledger. **On-touch only**, never a bulk sweep — *except* live/canonical docs (READMEs, current
-  specs, org profiles), which are swept proactively. **A `repo-name` rename does NOT rename a
-  same-spelled concept.**
-- **Before a "cut"/promotion** → owner-triggered ONLY, one-way. Never agent-initiated.
+  ledger. **On-touch only**, except live/canonical docs (READMEs, current specs) which are swept
+  proactively. **A `repo-name` rename does NOT rename a same-spelled concept** — "blueprint" the
+  concept survived `blueprints`→`CommonFraming`.
 - **Git gates** → off-main commit freely; **`main` commit and GitHub push both need the owner's
   say-so.** Never touch the `jschwefel` GitHub account at all.
 - **Question → answer, then STOP.** A question is not a work order.
+- **Don't push the next phase.** Finish, report, stop. The owner starts the next one.
 
 ---
 
 ## Where we are
 
-**CommonStage is DESIGN-COMPLETE and committed. Nothing is built. The repo does not exist.**
+**Design-complete. Nothing built. The CommonStage repo does not exist.**
 
-The spec: `CommonMind/docs/_working/specs/2026-07-21-commonstage-design.md` (270 lines), on `main`,
-synced to GitHub.
+Spec: `CommonMind/docs/_working/specs/2026-07-21-commonstage-design.md` — **472 lines**, on `main`.
 
-CommonStage = the family's shared web presentation layer — standard, templates, styling, config
-schema, and eventually a generator for the public web pages of every family Org/product. **All orgs
-except ColdBoreBallistics.**
+CommonStage = the family's shared web presentation layer (org + product pages, rendered docs) for
+every family Org **except ColdBoreBallistics**.
 
-### Decided (in the spec)
+### Decided
 
-- **A fourth repo in the CommonPractices org**, beside CommonMind / CommonFraming / CommonTongue.
-  Justified by a four-lens PD run: all three existing charters would have to be weakened to host it.
-- **One declared shape flag per org**, in that org's `.github` site config:
-  `product` = the org IS the product (one product page; repos are plumbing, never enumerated) ·
-  `portfolio` = every repo IS a product (org index + a product page each). Same product-page
-  template both ways. **No per-repo role taxonomy, no release heuristic, no maintained product
-  list** — the owner explicitly rejected those as overthinking.
-- **Licence Apache-2.0** (client/local tool, not a managed service — Licensing Doctrine Q1).
-- **`foundation.css` consumed by identity, never copied or `../`-path-referenced.** It keeps owning
-  colour/theme/persona/a11y floor; CommonStage owns page structure only.
-- **Scope includes rendered docs sites**, not just landing pages.
-- **Sequencing: build two sites concretely, then extract** — TestingAutoPilot (`product`) +
-  SurfaceWorks (`portfolio`).
-
-**Key finding, surfaced before any site was built:** two different kinds of multiplicity — *one
-product, many repos* (AutoPilot: core/macos/ios/android/web + tap) vs *many products, one org*
-(SurfaceWorks: Lucidity/Palette/Codex). The flag exists to keep them from being conflated.
+| | |
+|---|---|
+| **Where it lives** | A 4th repo in the **CommonPractices org**. Four-lens PD run: all three existing CP charters would have to be weakened to host it |
+| **Shape flag** | One per org, declared in `.github`. `product` = the org IS the product · `portfolio` = every repo IS a product. No per-repo roles, no heuristics, no maintained product list |
+| **Licence** | Apache-2.0 (client tool, Licensing Doctrine Q1) |
+| **Hosting** | **The owner's own fully-controlled server** — not GitHub Pages. Server-side analytics are the owner's, explicitly out of CS scope |
+| **Config** | **Strict JSON.** 3 required fields (`org`, `hostname`, `shape`); rest authored-with-defaults or **computed-never-stored** (URL, colour/mark, licence, repo list) |
+| **⭐ `hostname` ≠ `org`** | `jschwefel-workshop` → `workshop.schwefel.net`. **The ordinary case, not an edge case.** Every identifier that can diverge is its own field |
+| **Hard exclusions** | No analytics field of any kind; **no field may lower the accessibility floor** |
+| **GitHub signals** | Downloads/clones/stars ARE wanted as page **content** (≠ visitor measurement). Build-time vs client-side fetch = a plan decision |
+| **Proving pair** | **TestingAutoPilot** (`product`) + **CommonPractices** (`portfolio`) — CP carries the heaviest docs, so docs rendering is proven in phase one and CS is self-hosting |
+| **Sequencing** | Build both sites concretely, **then** extract the apparatus |
 
 ---
 
-## Next — the gate
+## Next — owner chose "housekeeping first" (2026-07-22), now done
 
-**§8.1 must be decided before an implementation plan is worth writing:** does **CommonPractices**
-join the proving set as a third site?
+**The gate after housekeeping is §8.2 — the stack choice.** It is the only open item that actually
+blocks building. Language-Selection Doctrine governs; deserves its own PD run. Best Practices (Lens
+3) warned that specifying a config schema *before* choosing the tool risks a schema no generator
+wants — so treat the §4 schema as provisional until the stack is picked.
 
-It is itself a `portfolio` org and holds the family's heaviest documentation, so it adds no new page
-kind — only brutal content behind the same template. It is the natural docs-rendering stress test,
-and it makes CommonStage self-hosting. **Docs rendering is the dominant engineering cost**; if the
-proving pair excludes a docs-heavy site, the extraction will not have proven the expensive half.
+Then: **create the CommonStage repo** (Org & Repo Bootstrap Doctrine) and move the spec out of
+CommonMind's `_working/` into its real home — CS design belongs in CS. Then `writing-plans`.
 
-Then **§8.2 stack choice** (Rust/TS/Python/Hugo/Astro — Language-Selection Doctrine, own PD run),
-then `writing-plans`. A plan written before the stack is chosen would be mostly placeholder.
+**Mild chicken-and-egg to decide, not a blocker:** CS would be a 4th CP repo, so building CP's
+`portfolio` site means either creating the repo first or rendering three product cards and adding
+the fourth later.
 
 ---
 
-## Also open (recorded in spec §8, all undecided)
+## Open (spec §8) — all recorded as undecided, none blocking per the owner
 
-- **DeckLibre nesting** — its own Org *and* a SurfaceWorks product. One page referenced twice, or
-  two authored pages? An SSoT question, not cosmetic.
-- **Hosting** — GitHub Pages vs the owner's VPS. Both support `*.schwefel.net`. Pages has **no
-  access logs, ever**, and cannot serve dynamic content; the VPS needs a deploy pipeline per site.
-  Static output makes it reversible for ~an afternoon, so it does not block building.
-- **jschwefel-workshop's shape** — may hold repos not meant for public presentation, which
-  `portfolio`'s render-everything rule would surface. **Check before applying `portfolio` to it.**
+- **§8.2 stack choice** — unmade.
+- **§8.3 empty/single-repo `portfolio` org** — **not hypothetical: 2 of 7 orgs today.**
+- **§8.5 CommonStage owes a stated ordered North Star set** — the doctrine's §6 checklist is
+  reproduced in the spec, with a candidate-evidence table. **Owner-driven; a *not-yet*, not a
+  blocker.** ⚠️ §4.1's config tiering currently invokes the SurfaceWorks family ordering, which
+  §2.1 permits only as an explicit ratified choice.
+- **Per-repo overrides** in `portfolio` orgs — raised, never ruled on.
 
 ---
 
 ## Verification state
 
-- `[V]` Rename verified against reality this session — `gh api orgs/CommonPractices/repos` + local
-  dirs. `design-doctrine`→**CommonMind**, `blueprints`→**CommonFraming**.
-- `[V]` All 13 relative links in the spec resolve (each `test -e`'d, not eyeballed).
-- `[V]` Spec swept for the rename: repo refs updated; **the concept "blueprint" and the verbatim
-  CommonTongue README quote deliberately preserved** — the live README was re-read to confirm it
-  still literally says *"not part of blueprints"*.
-- `[V]` Stale measured fact corrected: CommonMind is **37 files / ~7,250 lines** (was written as
-  33 / ~6,900).
-- `[V]` `CommonMind` `main` synced to GitHub (0 ahead).
-- `[A]` **Nothing about CommonStage has been built or tested — there is no code to verify.**
+- `[V]` Per-org repo inventory, `gh api orgs/<org>/repos`, 2026-07-21 — in spec §1.
+- `[V]` **StudioEnsemble and DeckLibre have NO pushed product repos** (`.github` only). CameraConductor
+  + LiteController exist **locally, unpushed**. 2 of 7 in-scope orgs render an empty index today.
+- `[V]` SurfaceWorks *does* state its ordered NS set in `.github/profile/README.md` — so the §8.5
+  defect was **silent inheritance**, not invented values.
+- `[V]` All relative links in the spec resolve (each `test -e`'d, not eyeballed).
+- `[V]` Rename verified: `design-doctrine`→**CommonMind**, `blueprints`→**CommonFraming**.
+- `[A]` **Nothing about CommonStage has been built or tested. There is no code.** Every design claim
+  is unproven by construction.
 
 ---
 
-## Files / branches
+## Corrections I made to my own work (do not re-derive)
 
-- `CommonMind/docs/_working/specs/2026-07-21-commonstage-design.md` — the spec.
-- Commits: `e24243c` (spec) → `8c2c40c` (rename sweep), both on `main`, pushed to GitHub.
-- No open branches from this session; both spec branches merged fast-forward and deleted.
+1. **"DeckLibre is a SurfaceWorks product" — FALSE.** From a stale MEMORY.md index line, trusted
+   instead of checked. SurfaceWorks = `.github`+Lucidity+Palette+Codex. Memory fixed at source.
+2. **Traded ease-of-use against choice** — forbidden by North Stars §5. The three-tier config *is* a
+   satisfy-both construction; the design was right, the justification wasn't. Rewritten.
+3. **Attacked §8a A3 wrongly** — the org is a **suite** (M365 : Word/Excel), so org identity in
+   `.github` and product facts in the product repo are two tiers, not a split.
+
+---
+
+## §8a — adversarial review, dispositioned by the owner
+
+Six attacks recorded **with rulings**, so a dismissal reads as judgement, not oversight. A1 rejected
+(`product` is a real shape) · A2 accepted+deferred (product-page template fits shipping products, not
+docs/spec repos — surface when the build hits it) · A3 moot · A4 bounded (workshop is *sui generis*)
+· A5 "then we prove it" · A6 executive decision (coupling is deployment-time only).
+
+> **Owner framing governing all of it:** *"All of the PDs will be satisfied. This is EARLY stage."*
+> An unratified NS set and an unchosen stack are **not yet**, not defects.
+
+---
+
+## Files / branches / state
+
+- Spec: `CommonMind/docs/_working/specs/2026-07-21-commonstage-design.md`
+- Commits: `e24243c` → `8c2c40c` → `3eb3938` → `d5b6dda` → `90c234a` → `ac5d1a0` → `ea4dedd`
+- All on `main`; every working branch merged fast-forward and deleted. **No open branches.**
 
 **Do not touch (other sessions' work):**
 - `.claude/handoffs/CommonPractices.md` — another session's live handoff, modified in the tree.
-- `docs/_working/specs/2026-07-21-accessibility-as-north-star-design.md` — untracked, not ours.
-- **Forgejo is handled outside this session.** CommonFraming/CommonTongue are behind on that remote;
-  not our concern. Note the Forgejo-side repo rename had not happened as of 2026-07-21 (the
-  `CommonMind` URL did not resolve; the old one did, via redirect).
+- `docs/_working/specs/2026-07-21-accessibility-as-north-star-design.md` — not ours.
+- **Forgejo is handled outside this session.** Note its repo rename had not happened as of
+  2026-07-21 (`CommonMind` URL did not resolve; old one did, via redirect).
 
 ---
 
 ## Known, not fixed
 
 `CommonFraming/README.md` and `CommonTongue/README.md` link siblings via checkout paths
-(`../CommonMind/`, `../LiteController/`). The rename updated the *names* but the **path coupling
-remains** — exactly what Repository-Portability forbids; breaks for every off-machine reader and any
-web render. Out of scope for CommonStage, recorded in spec §5.1, **must be fixed before those
-READMEs are rendered to the web.**
+(`../CommonMind/`, `../LiteController/`). The rename updated the *names*; the **path coupling
+remains** — exactly what Repository-Portability forbids. Breaks for every off-machine reader and any
+web render. Out of scope for CommonStage (spec §5.1), **must be fixed before those READMEs render to
+the web.**
