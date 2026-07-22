@@ -18,8 +18,23 @@ common way of declaring what a site contains.
 **In scope:** every Org except **ColdBoreBallistics** (CBB is a separate business identity with its
 own branding rules; see the global CBB branding directive).
 
-Current orgs in scope: TestingAutoPilot, DeckLibre, StudioEnsemble, jschwefel-workshop,
-CommonPractices, SurfaceWorks, ObservationPost.
+Current orgs in scope, with what each actually holds on GitHub (verified 2026-07-21 via
+`gh api orgs/<org>/repos`):
+
+| Org | Product repos today | Note |
+|---|---|---|
+| TestingAutoPilot | `autopilot-core`, `-macos`, `-ios`, `-android`, `-web`, `homebrew-autopilot` | The `product` proving site |
+| CommonPractices | CommonMind, CommonFraming, CommonTongue | The `portfolio` proving site |
+| SurfaceWorks | Lucidity, Palette, Codex | |
+| ObservationPost | Oscura | Single-product `portfolio` |
+| jschwefel-workshop | `esp-idf-ds3231`, `medit`, `kiln` | Unrelated one-offs; *sui generis* (§8a A4) |
+| **StudioEnsemble** | **none — `.github` only** | CameraConductor + LiteController exist **locally, unpushed** |
+| **DeckLibre** | **none — `.github` only** | |
+
+⚠️ **Two of seven orgs would render an empty index today.** This is why §8.3 (what an empty or
+single-repo `portfolio` org does) is a present-state question, not a hypothetical edge case. A
+product repo appearing on either org changes that org's site with no config edit — which is the
+flag's intended behaviour, but means those two sites are **not buildable as proof of anything yet**.
 
 **Licence:** Apache-2.0. Per [Licensing Doctrine](../../../licensing-doctrine.md), Q1's
 client-vs-service tie-breaker: a static-site generator an operator runs against their own repos is a
@@ -378,7 +393,9 @@ fabricated ranking; it is that **CommonStage invoked a sibling's set without sta
 own** — the silent-inheritance failure, not an invented-values failure. That also makes the
 by-reference route genuinely available to CommonStage, *if* the owner ratifies it explicitly.
 
-**This is a gap, recorded rather than papered over.** The conclusions may survive ratification
+**This is a gap, recorded rather than papered over — but it is a *not-yet*, not a blocker.** Per the
+owner (2026-07-21): *"All of the PDs will be satisfied. This is EARLY stage."* The set gets stated
+when the owner states it; design continues meanwhile. The conclusions may survive ratification
 unchanged — CommonStage is a presentation-layer product and the family ordering may genuinely be
 right for it — but *"the ordering justifies the design"* is not a claim this spec is currently
 entitled to make.
@@ -413,6 +430,35 @@ is exactly why §1.4 provides the floor form. **That is a judgement for ratifica
 this spec should presume.**
 
 Until the set exists, §4.1's ⚠️ note stands.
+
+---
+
+## 8a. Adversarial review — 2026-07-21
+
+The design was attacked deliberately (owner-requested) and each finding dispositioned by the owner
+the same day. **Recorded so the attacks are not re-derived, and so a dismissal is visible as a
+judgement rather than an oversight.**
+
+> **Framing the owner set, which governs every row below:** *"All of the PDs will be satisfied. This
+> is EARLY stage."* Several attacks below applied a maturity bar this work has not reached — an
+> unratified North Star set and an unchosen stack are **not yet**, not **defects**. They are recorded
+> in §8 and do not gate design.
+
+| # | Attack | Disposition |
+|---|---|---|
+| **A1** | The pair proves `portfolio` twice and `product` once (n=1); `product` may be "an index with one card minus the index" — a boolean inflated into an architecture. | **REJECTED.** `product` is a genuine shape with its own content, not a degenerate index. |
+| **A2** | `portfolio` renders repos, but products aren't repos: CommonMind (37 doctrine files), CommonFraming (ships no code), CommonTongue (a package) would each get a product page whose install/downloads/screenshots fields are empty. | **ACCEPTED, deferred.** "We will deal with it." Most of the family is WIP and CP is the closest thing to a full repo set that exists — which is *why* it is the proving site. Surface the template mismatch when the build hits it. |
+| **A3** | Config in `.github` splits product identity across two repos and creates an unnamed currency obligation. | **MOOT — attack was misaimed.** The org is a **suite** (M365 : Word/Excel). Org-level identity belongs in `.github`; product facts belong to the product repo. Two tiers, not one split. |
+| **A4** | "No maintained product list" is false once `exclude`/`order`/`featured` are used; jschwefel-workshop (unrelated one-offs) is the live counterexample. | **NOTED, bounded.** Workshop is *sui generis* and likely the only org of its kind. Not a general flaw in the flag. |
+| **A5** | Docs rendering is claimed proven, but the design has no position on the hardest artifact — CommonMind's 47 KB README whose Documents table is ~35 paragraphs in markdown cells. | **ACCEPTED as work, not defect.** "Then we prove it." This is exactly what the CP proving site is for. |
+| **A6** | Self-hosting is stated only as an upside; it is also a circular dependency — if CommonStage breaks, the doctrine site breaks with it. | **ACCEPTED, executive decision.** Bounded: a static generator can render CommonMind from anywhere, so the coupling is deployment-time only, not structural. |
+
+**One finding survives as a spec correction rather than a design change** — see §1: two of the seven
+in-scope orgs (**StudioEnsemble**, **DeckLibre**) currently have *no pushed product repos*, only
+`.github`. A `portfolio` render of either produces an empty index today. This makes §8.3's
+"empty/single-repo `portfolio` org" not a hypothetical edge case but **the present state of 2 of 7
+orgs** — verified 2026-07-21 via `gh api orgs/<org>/repos`. StudioEnsemble's CameraConductor and
+LiteController exist **locally but unpushed**.
 
 ---
 
