@@ -14,109 +14,31 @@ decision went wrong, and the wrongness is named.
 ## 1. Have ordered values, and use them
 
 **Name a small set of guiding values, put them in priority order, and check every non-trivial
-decision against them.**
+decision against them.** These are a project's **North Stars**.
 
 The **order is the entire point**. Unordered values are useless *precisely when you need them*
-— when two of them conflict. "We value security and speed" resolves nothing at 2 a.m.
+— when two of them conflict. "We value security and speed" resolves nothing at 2 a.m.; a
+*ranking* does.
 
-This is a **framework, not a creed.** The load-bearing distinction:
+> **What a North Star is, how a project states its own, and the worked examples all live in the
+> [North Stars Doctrine](north-stars-doctrine.md) — the single home for the framework.** (A project
+> states its stars in its own docs and references that doctrine; there is no dedicated North-Stars
+> file.) This section covers only what a *decision* does with them: how the ranking resolves a
+> genuine conflict (§2), and the failure of widening a scoped rule into a law (§3). North Stars are
+> also **Lens 1** of the four-lens Prime Directives (§11).
 
-> **Alignment to your values is (virtually) non-negotiable. *How* you align to them is (almost
-> always) negotiable.**
+The one distinction to carry here, because §§2–4 lean on it:
 
-A decision must serve the values; that duty is near-absolute, and dodging it takes a recorded,
-approved exception. But *the construction that serves them* is open — usually several designs
-satisfy the stars, and picking one is a judgment call (often a setting; see §4). Keep these
-apart: the value is rigid, the means is flexible. Most of this document is about finding a means
-that honours the values without pretending the means was itself mandated (§§2–4).
+> **Alignment to your North Stars is (virtually) non-negotiable. *How* you align to them is
+> (almost always) negotiable.**
 
-Rules of use:
-
-- **Small.** Three to five. A list of ten is a list of none.
-- **Ordered.** Not a set. A ranking.
-- **Consulted before deciding**, not cited afterward to justify a decision already made.
-- **A violation requires a recorded, approved exception.** Never a silent one.
-
-### The worked example: CameraConductor's North Stars
-
-**In order:**
-
-> ### 1. Accessibility
-> **First-class, not a retrofit.**
-> Not a compliance checkbox bolted on before release — a constraint that shapes the
-> architecture. If a design is fast, elegant, and unusable with a screen reader, it is not a
-> design.
->
-> ### 2. Ease of use — for the *primary flow*
-> **Simple by default; power behind Advanced.**
-> Note the qualifier: **for the primary flow.** Optimising the rare expert path at the cost of
-> the common one is the classic failure. The default path must be walkable by someone who has
-> never read the manual.
->
-> ### 3. Speed
-> **Especially app/profile switching.**
-> Latency in the thing you do a hundred times a day is not a detail. Speed is a *feature*, and
-> it is a feature that is nearly impossible to retrofit.
->
-> ### 4. Choice
-> **Prosumer. Give options; don't hardcode one opinionated path.**
-> The user is assumed competent. Where a reasonable person could want it the other way, they
-> get to have it the other way. (This is the star that produces §4's "make it a setting".)
-
-**They are ordered, and the order does real work.** When Accessibility (#1) and Choice (#4)
-collided over user-supplied CSS, the ranking said Accessibility could not be lost — which
-forced the search for a construction that kept both (§2), rather than a quiet trade.
-
-**Every decision aligns, or it is a justified and approved exception** — recorded, never silent.
-
-**Small decisions:** if the values give a clear answer, act on it — don't ask.
-**Big decisions:** the answer the values give is the one you *recommend*.
-
-**⚠️ Alignment is near-non-negotiable; the *means* of alignment is not — and the contents are
-this project's judgment.** Two halves, don't conflate them:
-
-- **The framework transfers, and so does the duty to align.** Any project can (and should) have
-  a small ordered set of values and check decisions against them; within a project that has
-  them, aligning to them is close to absolute.
-- **The specific values are the project's own, and *how* you align to them is negotiable.** A
-  different product might rightly put Speed first, or have Security, Cost, or Correctness as a
-  star. And for any given decision, several constructions usually satisfy the stars — which one
-  you choose is open.
-
-Two projects landing on the same values (as similar products often do) is **convergence, not
-copying**. The failure §3 warns about is *unthinking* adoption — importing a list, or freezing a
-particular *means* into a mandate, without checking it against the actual project. Sharing the
-framework is the point; sharing values is fine when they genuinely fit.
-
-**Present the analysis WITH the question, never after it.**
-
-When you bring someone a decision, show what the values say about each option *in the question
-itself*. Producing the analysis only when challenged is a tell that you decided first and
-rationalised second.
-
-> **CameraConductor:** this had to be said out loud — *"North Star analysis before every
-> choice… present that analysis WITH the question, never after or on request."* It was a
-> correction, and it was fair.
-
-### Values only exist if they change outcomes
-
-A stated value that never overrules a convenient decision is decoration. Here is where each of
-CameraConductor's four **actually changed the design** — which is the only evidence that they
-are real:
-
-| Star | Where it *forced* an outcome |
-|---|---|
-| **Accessibility** | Controls are **generated from a typed constraint model** rather than hand-drawn — which is what makes them native, labelled, and keyboard-operable *by construction*. The dense icon-grid the reference app used would have read to a screen reader as "button, button, button". |
-| | The **floor** exists (see §2). A user may restyle everything and break nothing. |
-| | Colour-blind support is a **modifier**, not a theme — because forcing someone to *choose which disability to accommodate* is not accessibility. |
-| **Ease of use** | The config **can be edited in the UI**. An earlier rule ("the config is hand-authored") would have made a new user hand-edit YAML before the product did anything — a wall at first contact. It was struck for violating this star. |
-| | Diffing flags **only what should match**. Warning about intentional differences trains the user to ignore warnings — which makes the product *worse*, not more informative. |
-| **Speed** | Live view is explicitly the **droppable** path; control traffic always wins. A monitoring wall streams cheap thumbnails so it can be left running. |
-| | Switching cameras is a **render, not a reconnect** — every camera stays connected regardless of what's displayed. |
-| **Choice** | Three layouts, five themes, three personas — **all of them ship**, none is privileged in the code. |
-| | Behaviours with defensible alternatives are **settings with safe defaults** (§4), not opinions. |
-
-**If you cannot fill in a row, that star is not a value — it is a slogan.**
+A decision must serve the values — that duty is near-absolute, and dodging it takes a recorded,
+approved exception. But *the construction that serves them* is open: usually several designs
+satisfy the stars, and picking one is a judgment call (often a setting; see §4). The value is
+rigid, the means is flexible. Most of this document is about finding a means that honours the
+values without pretending the means was itself mandated (§§2–4). And **present the analysis WITH
+the recommendation**, never backfilled — the tell of deciding first and rationalising second
+(generalized to all four lenses in §11).
 
 ---
 
@@ -388,7 +310,7 @@ true. A non-trivial decision is evaluated against **four distinct lenses**, coll
 
 | # | Lens | Asks |
 |---|---|---|
-| 1 | **North Stars (NS)** | Does it serve the project's ordered values? *(§1 — each project fills in its own.)* |
+| 1 | **North Stars (NS)** | Does it serve the project's ordered values? *(defined in the [North Stars Doctrine](north-stars-doctrine.md); §1 here covers how the ranking resolves conflicts. Each project fills in its own.)* |
 | 2 | **Blueprints (BP)** | Does it fit the relevant product-**shape** blueprint — or is a blueprint even the right shape here? |
 | 3 | **Best Practices** | Is it the idiomatic, conventional, correct-*way* answer — industry / by convention / de facto / current conventional wisdom? |
 | 4 | **Correctness** | Is it actually *true* — does it hold, including single-source-of-truth for the record? |
