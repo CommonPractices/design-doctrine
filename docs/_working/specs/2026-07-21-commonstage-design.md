@@ -145,15 +145,66 @@ Neither star is sacrificed. Add: **nothing display-facing is derived from a name
 
 | Field | Example | Why |
 |---|---|---|
-| `org` | `jschwefel-workshop` | The GitHub namespace. **Never rendered.** |
+| `org` | `jschwefel-workshop` | The source-host namespace. **Never rendered.** |
 | `hostname` | `workshop` | Yields `workshop.schwefel.net`. |
 | `shape` | `portfolio` | §2's flag. |
 
 ⭐ **`hostname` is NOT derived from `org`, and this is the ordinary case, not an edge case.** The org
-name is a GitHub namespace; the hostname is a presentation choice. `jschwefel-workshop` becomes
-`workshop.schwefel.net` — deriving it would produce `jschwefel-workshop.schwefel.net`, which no one
-would choose. The same divergence applies to the display name. **Every identifier that can diverge
-is its own field.**
+name is a namespace on the git host; the hostname is a presentation choice. `jschwefel-workshop`
+becomes `workshop.schwefel.net` — deriving it would produce `jschwefel-workshop.schwefel.net`, which
+no one would choose. The same divergence applies to the display name. **Every identifier that can
+diverge is its own field.**
+
+#### 4.1.1 The hostname resolution chain
+
+`hostname` resolves in three ordered steps. Each is overridable; none is a second copy of a fact
+held elsewhere.
+
+| Step | Source | Result for the worked case |
+|---|---|---|
+| 1. Default | the repo/org name | `jschwefel-workshop` |
+| 2. Explicit `hostname` | authored, when the default is wrong — **the ordinary case** | `workshop` |
+| 3. Variant affix | authored, defaults to none | `workshop-beta` |
+
+⭐ **The affix applies to the *chosen* hostname (step 2), never to the namespace (step 1).** Setting
+both yields `workshop-beta`, never `jschwefel-workshop-beta`. This falls out of applying the variant
+at step 3 rather than folding it into the default.
+
+**The affix is a value, not a boolean.** A `true`/`false` flag would hardcode `-beta` into the
+generator; the first time a site wants `-staging` or `-preview`, the schema fights the author. A
+field holding the affix itself — absent meaning none — costs the same to author and needs no
+repaint. It also defers the choice of *what the affix should say* out of the tool entirely.
+
+**The affix is independent of publication status.** It is deliberately not coupled to whether a repo
+has reached the public host (§4.4). Coupling them would silently change a site's URL at the moment
+the repo is first pushed — a broken-link event firing exactly when a project starts drawing
+attention. The affix is turned on and off deliberately. The automatic coupling remains addable
+later; the reverse would not be.
+
+#### 4.1.2 The publish branch
+
+**`branch` — configurable, defaulting to the repo's own default branch.** Absent, a repo renders
+from `main`/`master` as today; nothing changes for repos that do not care.
+
+This reads a maturity signal that **already exists in git** rather than inventing one — the same
+infer-don't-declare position §4.4 takes on publication status. A repo with unreviewed commits
+landing on `main` and reviewed content on a release branch can publish the latter without the
+generator learning a new concept.
+
+**Branch and variant are a pair, not two independent fields.** Set a pre-release `branch` *without*
+a variant affix and unreviewed content publishes silently to the production hostname. That is a
+plausible authoring mistake, not an exotic one, so the config expresses *"this branch publishes to
+this hostname"* as a unit rather than as two fields that must happen to agree.
+
+**A configured branch that does not exist is reported, never silently substituted.** Falling back to
+the default branch without saying so renders `main` while the author believes they are seeing
+`develop` — the §4.4 rule applied to branches: absence is information.
+
+**Deliberately not built: multi-branch publishing.** One repo rendering *both* a stable and a beta
+site simultaneously is the obvious next thought and a large jump — two outputs, two hostnames, a
+doubled build, and a generator that must understand multiplicity. **One branch, one site, one
+hostname.** Publishing both is expressible as two config entries; multiplicity falls out of
+repetition rather than a feature.
 
 **Authored — nothing else holds these facts.** `name` (display), `full_name`, `tagline`, `blurb`,
 `status` (per User-Documentation Doctrine's honest-status rule), `links`, `exclude` (repos not to
@@ -184,17 +235,71 @@ back to GitHub metadata — they must be authored.
   [`foundation.css`](../../../assets/foundation.css) establishes. Accessibility is the family
   presentation layer's first North Star; a knob that can switch it off would make it advisory.
 
-### 4.3 GitHub repo signals are content
+### 4.3 Publication signals are content — and they are optional
 
-Download counts, clone/view traffic, and stars are **wanted on the page** — they are content fetched
-from the GitHub API, not visitor measurement. Distinct from §4.2's exclusion, which concerns
-observing site visitors.
+Download counts, clone/view traffic, and stars are **wanted on the page** — they are content, not
+visitor measurement. Distinct from §4.2's exclusion, which concerns observing site visitors.
 
-This means a product page is not purely static output. Whether the numbers are **build-time fetched**
-(accurate as of last build, no client request) or **client-side fetched** (live, requires a request
-to GitHub from the visitor's browser) is an **implementation decision for the plan**, with a real
-tradeoff: the client-side form contacts a third party from the visitor's browser, which §4.2's
-spirit disfavours.
+**Fetched at build time. Resolved.** This was previously left open between build-time and
+client-side fetching; the CI build model (§4.4) settles it. The builder already holds host
+credentials, the numbers land in static HTML, and **no visitor's browser ever contacts the git
+host** — which client-side fetching would have required, contacting a third party from the reader's
+browser against §4.2's spirit, and putting every reader against an API rate limit.
+
+⭐ **Name the concept for what it is, not for today's host.** A `github` config block, a
+`github_stars` field, or a `not_on_github` state would hardcode one host into the schema and make
+any other primary awkward permanently. These are **publication signals from wherever a repo is
+published** — one possible source among others. Identical behaviour today; no repaint later.
+
+### 4.4 A repo may have no publication signals, and that is not an error
+
+**A repo's presence on the public host is not a fact about the repo. It is a fact about its stage.**
+
+A repo is worked and tested on the staging git host and reaches the public host only when it is
+worth pushing — the family's *don't push until you have something worthy* rule, given somewhere to
+actually live. **This is a permanent, recurring, intended lifecycle stage, not a transitional one.**
+
+Consequently:
+
+- **Absence of publication signals is never an error, never fatal, never a placeholder.** A
+  generator that halted — or that rendered "coming soon" — would penalise exactly the discipline the
+  staging stage exists to enforce.
+- **Content never degrades.** The builder renders from the git host it runs on, which holds every
+  repo including unpublished ones. Signals are garnish; **substance is always present.** The blast
+  radius of a missing public repo is thin by construction.
+- **The generator needs exactly one concept:** *signals are optional, and their absence is
+  meaningful.* No error path, no maturity flag to maintain, no awareness of any host's rollout.
+
+**Loud and fatal are not the same thing.** Non-fatal must not mean silent: a build that quietly
+succeeds while repos are missing, saying nothing, is the failure to avoid. The build reports its
+delta — rendered, unpublished, faulted — so the distinction between *not yet public* and *should be
+there and isn't* survives. That report is a free progress signal from a system being built anyway.
+
+> **Worked case: HappyPath.** A workshop repo, pre-public, proving the staging shape. Chosen as the
+> proving repo precisely because **the interesting state is its default state** — it exercises the
+> optional-signals path on day one rather than leaving it untested until something happens to be
+> missing.
+
+### 4.5 The build model — CI pulls, by identity
+
+**A CI builder on the git host pulls repo content and config, and renders the family's sites.**
+Source repos know nothing about CommonStage: no site config of their own, no build toolchain, no
+webhook pointing back. One build produces the whole family site, which is what a *common* look
+requires.
+
+This is coupling **by identity** — the builder names repos by remote coordinate, never by checkout
+position — per [Repository-Portability Doctrine](../../../repository-portability-doctrine.md) §0.
+Network and read access across repos, which would be a caveat elsewhere, is simply a CI runner's
+normal operating condition.
+
+**Where CI runs is deliberately out of scope here** and does not change this design. What matters to
+the generator is only that *some* builder pulls by identity.
+
+**Build trigger — not yet decided.** Scheduled and manual are the early-stage pair: no source repo
+learns CommonStage exists, and a rebuild can be forced on demand. Push-triggering each repo is
+faster but requires every source repo to hold a webhook aimed at CommonStage — reintroducing, by a
+side door, the coupling the pull model exists to avoid. It is an optimisation to buy later, if
+staleness proves annoying, and it is reversible.
 
 ---
 
@@ -339,11 +444,52 @@ all unspecified. Those are implementation questions for the plan, not design que
 
 ### 8.2 Stack choice is unmade
 
-"Extract a generator" implies a language/framework decision — Rust, TypeScript, Python, Hugo, Astro,
-or other. Governed by
-[Language-Selection Doctrine](../../../language-selection-doctrine.md) and deserving its own PD run.
+"Extract a generator" implies a language/framework decision — Hugo, Astro/Starlight, or other.
 **Not decided.** Deliberately deferred until the two hand-built sites show what the generator must
 actually do.
+
+> ⚠️ **Correction — this section previously cited the wrong doctrine.** It named the
+> [Language-Selection Doctrine](../../../language-selection-doctrine.md) as governing. That doctrine
+> governs the ***human*-language chooser** — autonyms, BCP 47, RTL handoff — and has nothing to do
+> with choosing a programming language or framework. The pointer was recorded from the file's
+> **name**, unread, and propagated into two files before being caught on first reading.
+
+**What actually governs:**
+
+- **[Conventions Doctrine](../../../conventions-doctrine.md)** §0 — the ecosystem default wins;
+  deviation needs a stated constraint, and *"it was easier"* is the tell that you should not have
+  deviated. For a docs-heavy static site the convention is a mature SSG; **writing a bespoke
+  generator is the deviation** and must carry a reason.
+- **[Web UI Doctrine](../../../web-ui-doctrine.md)** — §3 explicitly declines to mandate a stack,
+  and §1's separation requirement is satisfied trivially (static output, no service, no back channel
+  possible). What it *does* bind is the **artifact**, below.
+
+**Doctrine constraints on the output — these can disqualify a candidate:**
+
+- **CSS ships as editable, replaceable files**, never inlined or minified into an opaque blob
+  (Web UI §2). A tool that force-inlines CSS with no escape hatch is **not eligible**.
+- **The two-layer `@layer floor-hard` / `floor-soft` accessibility floor must survive**
+  (Web UI §2.1, [Visual Identity](../../../visual-identity.md) §6).
+- **The hostile-stylesheet attack must be shipped** — the floor is trusted only once a stylesheet
+  genuinely trying to break it has been *watched to fail* against the unprotected version. This is
+  an acceptance test the plan owes, not a nicety.
+
+**Candidate reading (2026-07-22).** Build speed does not discriminate here: Hugo renders 10,000+
+pages in under a second versus minutes for Astro, but **under ~500 pages the difference is
+negligible** and CommonMind is ~37 files. The deciding axis is therefore toolchain versus
+batteries-included:
+
+| | Strength | Cost |
+|---|---|---|
+| **Hugo** | Single Go binary; no `node_modules`; no npm supply chain in CI | Go templating; docs chrome built by hand |
+| **Astro/Starlight** | Sidebar, ToC, search, dark mode, i18n already built; <50 KB first visit | Node toolchain and its dependency surface |
+
+⚠️ **Unverified and disqualifying if wrong:** whether Starlight's build leaves stylesheets as
+separate files rather than inlining them. Its theming is CSS-custom-property based, which *looks*
+compatible with Web UI §2 — but this is a claim to **test, not assume.**
+
+⚠️ **This choice is entangled with §4.5's build model, not independent of it.** Hugo has native
+support for pulling sibling content (submodules, mounts); Starlight would need that wired by hand.
 
 ### 8.3 An empty `portfolio` org renders nothing
 
@@ -430,6 +576,28 @@ is exactly why §1.4 provides the floor form. **That is a judgement for ratifica
 this spec should presume.**
 
 Until the set exists, §4.1's ⚠️ note stands.
+
+> ⭐ **Raised in priority 2026-07-22.** This was recorded as a *not-yet* rather than a blocker, per
+> the owner's *"All of the PDs will be satisfied. This is EARLY stage."* That framing stands. But
+> the §8.2 stack run came up **empty on Lens 1** — there was no ratified set to rank against — on a
+> decision that is expensive to reverse once two sites are built on it. That is the first time the
+> gap has **cost** something rather than merely being a known hole. The ordering has moved from
+> *eventually* to *before or alongside the stack pick.* **Owner's call, not the spec's.**
+
+### 8.6 Which config holds deployment-shaped facts
+
+Three things now resolve to a hostname: the org namespace, the explicit `hostname`, and the variant
+affix (§4.1.1). The first two are **identity** facts — what this org *is*. The affix is a different
+kind: a fact about **this deployment**, not about the org or the repo. `branch` (§4.1.2) is the
+same kind.
+
+§4.1 established that `hostname` is not derived from `org` precisely because they are different
+kinds of fact. By that same reasoning, deployment-shaped fields may not belong in the identity
+config at all.
+
+**Not decided, and deliberately not resolved by default.** Deployment mechanics are out of scope for
+now, so putting these fields in the identity config *provisionally* risks calcifying a placement
+nobody chose. Recorded here so the placement stays a decision rather than an accident.
 
 ---
 

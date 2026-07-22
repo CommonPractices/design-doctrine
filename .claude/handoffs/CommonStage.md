@@ -56,15 +56,30 @@ every family Org **except ColdBoreBallistics**.
 | **GitHub signals** | Downloads/clones/stars ARE wanted as page **content** (≠ visitor measurement). Build-time vs client-side fetch = a plan decision |
 | **Proving pair** | **TestingAutoPilot** (`product`) + **CommonPractices** (`portfolio`) — CP carries the heaviest docs, so docs rendering is proven in phase one and CS is self-hosting |
 | **Sequencing** | Build both sites concretely, **then** extract the apparatus |
+| **Build model** | **CI on the staging git host pulls** repo content + config and renders. Source repos know nothing about CS — no site config, no toolchain, no webhook. Coupling by identity. *Where CI runs = out of scope, doesn't change the design* |
+| **Trigger** | Scheduled + manual to start. Push-triggering reintroduces the coupling the pull model avoids — later, if staleness annoys |
+| **⭐ Optional signals** | A repo may have **no publication signals** (pre-public on staging). **Never an error, never fatal, never a placeholder** — it is a permanent, intended lifecycle stage, not migration lag. Content never degrades (builder renders from the host it runs on); signals are garnish. Generator needs ONE concept: *absence is meaningful*. **Loud ≠ fatal** — build reports its delta |
+| **Signal naming** | Name for the concept, **not today's host**. No `github` block / `github_stars` / `not_on_github` — "publication signals from wherever a repo is published" |
+| **Signals fetched** | **Build-time. RESOLVED** by the CI model — no visitor's browser ever contacts the git host |
+| **Hostname chain** | 3 steps: repo/org name → explicit `hostname` → variant affix. ⭐ **Affix applies to the CHOSEN hostname, never the namespace** (`workshop-beta`, never `jschwefel-workshop-beta`) |
+| **Variant affix** | **A value, not a boolean** (`-beta` hardcoded would fight `-staging`). **Independent of publication status** — coupling would silently change a URL the moment a repo goes public |
+| **Publish branch** | `branch`, defaults to repo's default. Reads a maturity signal git **already has**. **Branch+variant are a PAIR** — pre-release branch without an affix publishes unreviewed content to the production hostname. Missing branch = reported, never silently substituted |
+| **NOT building** | Multi-branch publishing (one repo → stable + beta simultaneously). **One branch, one site, one hostname**; both = two config entries |
 
 ---
 
 ## Next — owner chose "housekeeping first" (2026-07-22), now done
 
-**The gate after housekeeping is §8.2 — the stack choice.** It is the only open item that actually
-blocks building. Language-Selection Doctrine governs; deserves its own PD run. Best Practices (Lens
-3) warned that specifying a config schema *before* choosing the tool risks a schema no generator
-wants — so treat the §4 schema as provisional until the stack is picked.
+**The gate is §8.2 — the stack choice.** Hugo vs Astro/Starlight; **owner is reviewing sample
+sites.** Treat the §4 schema as provisional until the stack is picked.
+
+⚠️ **Wrong-doctrine error, caught and fixed 2026-07-22.** This file and spec §8.2 both said
+"Language-Selection Doctrine governs" the stack pick. **It does not** — that doctrine governs the
+*human*-language chooser (autonyms, BCP 47, RTL). The pointer was recorded from the file's **name**,
+unread, and propagated into two files. What actually governs: **Conventions Doctrine** §0
+(ecosystem default wins; "it was easier" = the tell) and **Web UI Doctrine** (§3 mandates no stack,
+but §2/§2.1 bind the *output*). **Lesson: a doctrine pointer is a fact — read the file before
+recording it.**
 
 Then: **create the CommonStage repo** (Org & Repo Bootstrap Doctrine) and move the spec out of
 CommonMind's `_working/` into its real home — CS design belongs in CS. Then `writing-plans`.
@@ -77,12 +92,19 @@ the fourth later.
 
 ## Open (spec §8) — all recorded as undecided, none blocking per the owner
 
-- **§8.2 stack choice** — unmade.
+- **§8.2 stack choice** — unmade; owner reviewing samples. ⚠️ **Entangled with the §4.5 build
+  model** — Hugo pulls sibling content natively (submodules/mounts), Starlight needs it wired by
+  hand. ⚠️ **Unverified + disqualifying if wrong:** whether Starlight's build leaves CSS as separate
+  files rather than inlining (Web UI §2 requires editable/replaceable). **Test, don't assume.**
 - **§8.3 empty/single-repo `portfolio` org** — **not hypothetical: 2 of 7 orgs today.**
-- **§8.5 CommonStage owes a stated ordered North Star set** — the doctrine's §6 checklist is
-  reproduced in the spec, with a candidate-evidence table. **Owner-driven; a *not-yet*, not a
-  blocker.** ⚠️ §4.1's config tiering currently invokes the SurfaceWorks family ordering, which
-  §2.1 permits only as an explicit ratified choice.
+- **§8.5 CommonStage owes a stated ordered North Star set** — ⭐ **raised in priority 2026-07-22.**
+  Still owner-driven and still a *not-yet* per the EARLY-stage framing, **but** the §8.2 run came up
+  **empty on Lens 1**, on a decision expensive to reverse once two sites exist. First time the gap
+  **cost** something. Moved from *eventually* → *before or alongside the stack pick.*
+- **§8.6 (NEW) where deployment-shaped facts live** — the variant affix and `branch` are facts about
+  *a deployment*, not about the org/repo identity. §4.1 split `hostname` from `org` on exactly that
+  reasoning. Deliberately **not** defaulted into the identity config, to keep the placement a
+  decision rather than an accident.
 - **Per-repo overrides** in `portfolio` orgs — raised, never ruled on.
 
 ---
@@ -109,6 +131,15 @@ the fourth later.
    satisfy-both construction; the design was right, the justification wasn't. Rewritten.
 3. **Attacked §8a A3 wrongly** — the org is a **suite** (M365 : Word/Excel), so org identity in
    `.github` and product facts in the product repo are two tiers, not a split.
+4. **Cited Language-Selection Doctrine for the stack pick — WRONG doctrine.** It governs the
+   *human*-language chooser. Recorded from the filename, unread, then propagated into two files.
+   **A doctrine pointer is a fact: read the file before recording it.** Also missed
+   `web-ui-doctrine.md` entirely — never opened until 2026-07-22, and it is squarely on-topic.
+5. **Modeled pre-public repos as migration lag — WRONG.** Corrected by the owner: being on the
+   staging host and not the public one is a **permanent, recurring, intended lifecycle stage**
+   (the *don't push until worthy* rule), not a transitional defect. I had also recommended "fail
+   loudly, publish nothing," which would have **blocked the very pattern it must support.**
+   Migration is explicitly **not our concern.**
 
 ---
 
