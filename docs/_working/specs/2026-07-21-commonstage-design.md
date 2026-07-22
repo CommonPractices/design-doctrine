@@ -85,21 +85,78 @@ in scope for the standard but are **not** proving sites; they adopt the shape on
 
 ## 4. Configuration
 
-A **full site config** file in each org's `.github` repo, carrying:
-
-- **Shape** — `product` | `portfolio`
-- **Identity** — display name, org colour (from
-  [Identity-Mark Doctrine](../../../identity-mark-doctrine.md), which assigns one colour per org),
-  tagline, domain
-- **Navigation** and **footer**
-- **Docs sources** — which repos/paths supply rendered documentation
-
-It lives in `.github` because that is where org-level facts already live (the profile README and the
-community health set), per
+A **full site config** file in each org's `.github` repo. It lives there because that is where
+org-level facts already live (the profile README and the community health set), per
 [Org & Repo Bootstrap Doctrine](../../../org-and-repo-bootstrap-doctrine.md).
 
 Data out of code: the generator holds logic only. Changing what a site shows means editing the
 config, never the code.
+
+**Format: strict JSON** (RFC 8259), per
+[Data Format Doctrine](../../../data-format-doctrine.md) — this is a format the family itself
+defines, so the doctrine applies and JSONC/JSON5 are banned. Annotation goes in **data** (`_note`
+fields), never comments.
+
+### 4.1 The three tiers
+
+Ordering the North Stars resolves the tension between *ease of use* (few fields) and *choice* (many
+knobs): **the required set is tiny; everything else defaults; nothing display-facing is derived from
+a namespace.**
+
+**Required — 3 fields.** A minimum viable config is three lines.
+
+| Field | Example | Why |
+|---|---|---|
+| `org` | `jschwefel-workshop` | The GitHub namespace. **Never rendered.** |
+| `hostname` | `workshop` | Yields `workshop.schwefel.net`. |
+| `shape` | `portfolio` | §2's flag. |
+
+⭐ **`hostname` is NOT derived from `org`, and this is the ordinary case, not an edge case.** The org
+name is a GitHub namespace; the hostname is a presentation choice. `jschwefel-workshop` becomes
+`workshop.schwefel.net` — deriving it would produce `jschwefel-workshop.schwefel.net`, which no one
+would choose. The same divergence applies to the display name. **Every identifier that can diverge
+is its own field.**
+
+**Authored — nothing else holds these facts.** `name` (display), `full_name`, `tagline`, `blurb`,
+`status` (per User-Documentation Doctrine's honest-status rule), `links`, `exclude` (repos not to
+surface — `portfolio` renders everything by default, so this is the escape hatch), `order`,
+`featured`, `og_image`, `docs.*` (source, include/exclude globs, nav order, landing file),
+`theme_default`.
+
+Note that **no org currently sets a GitHub org description**, so taglines and blurbs cannot fall
+back to GitHub metadata — they must be authored.
+
+**Computed — never stored.** Storing these creates a second home for one fact
+([Single-Source-of-Truth](../../../single-source-of-truth-doctrine.md)):
+
+| Value | Resolved from | Never |
+|---|---|---|
+| Canonical URL | `hostname` + domain | a stored `url` field that can diverge |
+| Org colour + mark | the Identity-Mark asset in `.github/profile/` | a restated hex value |
+| Licence | the repo's own `LICENSE` | a restated licence name |
+| Repo list | the GitHub API | a hand-maintained product list |
+
+### 4.2 Two hard exclusions
+
+- **No analytics field of any kind.** Sites are hosted on a server the owner fully controls (§8.4);
+  server-side analytics land there and are the owner's to surface. CommonStage introduces no
+  third-party beacon and no client-side collector.
+- **No field may lower the accessibility floor.** There is deliberately no way for a config to
+  disable the contrast audit or override the `@layer` floor that
+  [`foundation.css`](../../../assets/foundation.css) establishes. Accessibility is the family
+  presentation layer's first North Star; a knob that can switch it off would make it advisory.
+
+### 4.3 GitHub repo signals are content
+
+Download counts, clone/view traffic, and stars are **wanted on the page** — they are content fetched
+from the GitHub API, not visitor measurement. Distinct from §4.2's exclusion, which concerns
+observing site visitors.
+
+This means a product page is not purely static output. Whether the numbers are **build-time fetched**
+(accurate as of last build, no client request) or **client-side fetched** (live, requires a request
+to GitHub from the visitor's browser) is an **implementation decision for the plan**, with a real
+tradeoff: the client-side form contacts a third party from the visitor's browser, which §4.2's
+spirit disfavours.
 
 ---
 
@@ -262,13 +319,19 @@ renders an index with **zero** product cards. The standard must say what an empt
 `portfolio` org does — render an empty index, fall back to a placeholder, or be excluded from
 generation until it has a product. **Undecided.**
 
-### 8.4 Hosting
+### 8.4 Hosting — DECIDED: the owner's own server
 
-GitHub Pages vs. the owner's existing VPS was analyzed in conversation and **not decided**. Both
-support custom `*.schwefel.net` subdomains. The live differences: Pages provides no access logs of
-any kind and cannot serve dynamic content, ever; the VPS provides both but requires a deploy
-pipeline maintained per site. Static output means the choice is reversible for roughly the cost of
-an afternoon, so it does not block building.
+**Resolved 2026-07-21 by the owner: sites are hosted on a server the owner fully controls**, not
+GitHub Pages. The VPS already serves other sites, so the marginal cost per site is near zero, and
+`schwefel.net` is owner-controlled DNS.
+
+**Server-side analytics are explicitly OUT OF SCOPE for CommonStage.** Access logs land on the
+owner's server and the owner surfaces them by their own means. CommonStage neither configures,
+collects, nor reports them, and **the site config carries no analytics field.** No third-party
+beacon and no client-side collector is introduced by the standard.
+
+What remains open is only the **deploy path** (Actions→rsync over a deploy key, a pull-based hook,
+or otherwise) — an implementation question for the plan, not a design question.
 
 ---
 
