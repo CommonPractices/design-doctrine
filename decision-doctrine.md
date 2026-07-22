@@ -322,7 +322,7 @@ the value: a decision that satisfies the North Stars can still be the wrong *sha
 
 **`BP` means Blueprints. `BP` never means Best Practices.** These are two different lenses
 that unfortunately share initials, and conflating them silently deletes one of the four.
-Blueprints are the SHAPES layer (`CommonPractices/blueprints/` — what form a product of this
+Blueprints are the SHAPES layer (`CommonPractices/CommonFraming/` — what form a product of this
 kind takes); Best Practices is the idiomatic-craft lens. **Write "Best Practices" out in
 full; reserve the abbreviation `BP` for Blueprints.**
 

@@ -4,7 +4,7 @@
 capability** — the break-glass, root-privileged diagnostic surface an operator reaches for when
 something is wrong and the normal interface cannot explain it. This document states *what that
 capability owes and how it is postured*; the concrete architecture (attach, message contract,
-conformance) is the **debug-channel blueprint** in [blueprints](../blueprints/), which this
+conformance) is the **debug-channel blueprint** in [blueprints](../CommonFraming/), which this
 doctrine points at and does not restate.
 
 It exists because "add some debug output" is how every product grows an ad-hoc, inconsistent,

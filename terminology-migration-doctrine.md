@@ -123,20 +123,30 @@ shape, §3 the on-touch behaviour for `active` rows.
 
 | Old | New | Scope | Status | Since |
 |---|---|---|---|---|
-| `design-doctrine` (repo/dir/URL) | `CommonMind` | repo-name | active | 2026-07-21 |
+| `design‑doctrine` (repo/dir/URL) | `CommonMind` | repo-name | active | 2026-07-21 |
 | `blueprints` (repo/dir/URL) | `CommonFraming` | repo-name | active | 2026-07-21 |
+
+> **Note — the "Old" column deliberately holds the pre-rename names as a *record*.** They must NOT
+> be rewritten to the new name by any sweep (that would erase the translation and re-break the
+> ledger — the exact §3 "never overwrite a provenance record" trap). The old-name cell for
+> design‑doctrine uses a non-breaking hyphen (`‑`, U+2011) precisely so a mechanical
+> `design-doctrine→CommonMind` pass does not eat it; read it as the ordinary ASCII repo name.
 
 **Notes on the current renames:**
 
 - Both are **`repo-name` scope only.** The repo/directory/remote-URL/path references are the atomic
   bucket (§1), swept at rename time. Neither renames a *concept*.
 - **The word "blueprint" is NOT renamed.** It remains the family's term of art — *a blueprint is a
-  reusable product-shape* ([Blueprints repo](../CommonFraming/) CHARTER; [Debugging
+  reusable product-shape* ([the CommonFraming repo](../CommonFraming/) CHARTER; [Debugging
   Doctrine](debugging-doctrine.md)'s "debug-channel blueprint"). `CommonFraming` is *the repo that
   holds the blueprints*; the concept keeps its name. There is deliberately **no `concept`-scope row**
   for it, so the on-touch rule does not touch prose that says "blueprint."
-- These rows flip to `complete` once a grep of live docs shows zero `design-doctrine`/`blueprints`
-  *repo* references remain (the concept word "blueprint" is not counted — it was never stale).
+- **Live-docs sweep is DONE (2026-07-21).** A grep of live/canonical docs shows zero old-name *repo*
+  references remain (see §4 completion note below). A **dormant tail of ~41 old-name references**
+  survives in dated `docs/_working/research/`, spec-changesets, and dormant decision logs across
+  CameraConductor / LiteController / CommonTongue / DeckLibre — these are the **lazy/on-touch bucket**
+  (§1): stale not live-breaking, left to heal when their file is next edited. The rows stay `active`
+  until that tail is drained; the ledger translates every occurrence in the meantime.
 
 ---
 

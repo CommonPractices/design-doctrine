@@ -174,7 +174,7 @@ Its discipline is entirely local:
   an off-machine build or a shipped link breaks when this convention changes, that is a §0 violation.
 
 > **Ecosystem:** the six family repositories materialise as
-> `~/repositories/CommonPractices/{design-doctrine,blueprints,CommonTongue}`,
+> `~/repositories/CommonPractices/{CommonMind,CommonFraming,CommonTongue}`,
 > `~/repositories/StudioEnsemble/{CameraConductor,LiteController}`, and
 > `~/repositories/DeckLibre/DeckLibre`. Given any `(Org, name)` the path is computable; given any
 > path the identity is readable back. The mapping is total in both directions — which is the whole
