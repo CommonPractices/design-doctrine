@@ -41,7 +41,7 @@ The **same product-page template** serves both. `portfolio` adds an index above 
 `product` is the case where the org itself is the single product.
 
 **Why a declared flag and not an inferred one.** Repo count does not determine shape:
-TestingAutoPilot has six repos and is one product; SurfaceWorks has three and is three products.
+TestingAutoPilot has six repos and is one product; CommonPractices has four and is four products.
 Only the org knows which it is, so the org states it. This is **data out of code** (Scripting
 Philosophy: business data lives in an input file the code reads at runtime, never in the code) — the
 generator branches on a declared fact, never on a heuristic it guessed.
@@ -57,10 +57,21 @@ repo gains a product page with no config edit — there is no currency obligatio
   `autopilot-macos`, `autopilot-ios`, `autopilot-android`, `autopilot-web`, plus
   `homebrew-autopilot`. Those five platform repos are implementation detail — surfacing them as five
   products would misrepresent the product entirely.
-- **SurfaceWorks** = `portfolio`. Three distinct products: Lucidity, Palette, Codex.
+- **CommonPractices** = `portfolio`. Distinct products: CommonMind, CommonFraming, CommonTongue —
+  and CommonStage itself once it exists.
 
 These are two genuinely different kinds of multiplicity — *one product, many repos* versus *many
 products, one org*. Conflating them is the failure this flag exists to prevent.
+
+**CommonPractices as the `portfolio` half is deliberate, not incidental.** It carries by far the
+family's heaviest documentation (CommonMind alone is 37 files / ~7,250 lines with dense
+inter-doctrine cross-linking), so it proves the expensive half of the apparatus — docs rendering —
+in phase one rather than deferring it. It also makes CommonStage **self-hosting**: the apparatus
+renders the org that contains it, so a docs-rendering regression is visible on the doctrine site the
+family reads most.
+
+Other family orgs (SurfaceWorks, DeckLibre, StudioEnsemble, ObservationPost, jschwefel-workshop) are
+in scope for the standard but are **not** proving sites; they adopt the shape once it is extracted.
 
 ---
 
@@ -194,7 +205,7 @@ three charters that are currently true.
 **Build two sites concretely first. Extract the shared apparatus from proven duplication second.**
 
 1. **Build TestingAutoPilot's site** (`product`) — real HTML/CSS, hand-assembled.
-2. **Build SurfaceWorks' site** (`portfolio`) — likewise.
+2. **Build CommonPractices' site** (`portfolio`) — likewise, including rendered docs.
 3. **Extract** templates, config schema, and generator from what actually proved invariant across
    the two shapes.
 
@@ -210,30 +221,23 @@ org* distinction, which a single-org design would have missed entirely.
 
 These are **not decided.** Recorded per Decision Doctrine §8 (record what is NOT decided).
 
-### 8.1 Docs rendering is the dominant cost, and the proving pair may not prove it
+### 8.1 Docs rendering — RESOLVED by the choice of proving pair
 
 Scope includes rendered documentation sites. Navigation generation, anchors, search, cross-document
 linking, and code highlighting are most of the engineering — far more than landing pages.
 
-**The problem:** neither TestingAutoPilot nor SurfaceWorks is the hard docs case.
-**CommonMind is** — 37 files, ~7,250 lines (2026-07-21), dense inter-doctrine cross-linking, and a README
-whose Documents table is ~35 substantial paragraphs rendered in markdown table cells. If the proving
-pair excludes a docs-heavy site, the extraction will not have proven the expensive half of the
-apparatus.
+An earlier draft paired TestingAutoPilot with SurfaceWorks and flagged that **neither is the hard
+docs case**, leaving the expensive half of the apparatus unproven. **Resolved 2026-07-21 by the
+owner: the `portfolio` half of the pair is CommonPractices, not SurfaceWorks.** CommonMind alone is
+37 files / ~7,250 lines with dense inter-doctrine cross-linking and a README whose Documents table
+is ~35 substantial paragraphs in markdown table cells — the family's hardest docs target.
 
-**CommonPractices is itself an Org** (`.github` + CommonMind + CommonFraming + CommonTongue, soon
-+ CommonStage) and is therefore a **`portfolio` org — the same shape as SurfaceWorks.** This makes
-it a cheap third proving site rather than an expensive special case: it introduces no new page kind,
-only the same `portfolio` template carrying by far the family's heaviest documentation behind each
-product card. It is the natural stress test for docs rendering.
+Docs rendering is therefore proven in phase one rather than deferred, and CommonStage is
+self-hosting (see §2, *Worked pair*).
 
-It also makes CommonStage self-hosting — the apparatus renders the org that contains it, so a
-regression in docs rendering is visible on the doctrine site the family reads most.
-
-**Options:** add CommonPractices as a third proving site (now the cheapest option); substitute it
-for one of the pair; or explicitly defer docs rendering to a second phase.
-
-**Unresolved.** Flagged during design; owner elected to start building rather than resolve it first.
+**What remains open** is not *whether* to render docs but *how far*: search, per-doctrine navigation,
+anchor stability across renames, and how the CommonMind README's dense table renders on the web are
+all unspecified. Those are implementation questions for the plan, not design questions.
 
 ### 8.2 Stack choice is unmade
 
@@ -243,12 +247,20 @@ or other. Governed by
 **Not decided.** Deliberately deferred until the two hand-built sites show what the generator must
 actually do.
 
-### 8.3 Nesting: DeckLibre exists in two places
+### 8.3 An empty `portfolio` org renders nothing
 
-DeckLibre is its own Org *and* is recorded as a SurfaceWorks product. Under the recursive rule
-(every product renders with the same template), a DeckLibre product page could legitimately appear
-in both contexts. Whether that is one page referenced twice or two authored pages is **undecided** —
-and it is an SSoT question, not a cosmetic one.
+**Withdrawn as originally written.** An earlier draft claimed DeckLibre existed both as its own Org
+and as a SurfaceWorks product, and raised a nesting/SSoT question. **That premise was false**,
+asserted from a stale memory rather than checked: verified 2026-07-21 against
+`gh api orgs/{DeckLibre,SurfaceWorks}/repos` — SurfaceWorks holds exactly `.github`, Lucidity,
+Palette, Codex, and **DeckLibre is a separate org that does not appear in it.** No product is
+currently nested in two orgs, so there is no nesting question to answer.
+
+The real open item the check surfaced instead: **DeckLibre is an org holding only `.github` — no
+product repos.** Under `portfolio` (every repo is a product, with `.github` excluded by rule) it
+renders an index with **zero** product cards. The standard must say what an empty or single-repo
+`portfolio` org does — render an empty index, fall back to a placeholder, or be excluded from
+generation until it has a product. **Undecided.**
 
 ### 8.4 Hosting
 
