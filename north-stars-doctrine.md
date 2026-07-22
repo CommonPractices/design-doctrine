@@ -66,6 +66,41 @@ star, name a place where it **forced** an outcome the project would otherwise no
 you cannot fill that row, the star is not a value — it is a slogan.** A project's stated stars carry
 this evidence (§3), and it is not optional.
 
+### 1.4 Accessibility is a value, not only machinery
+
+Accessibility is a **standing family value**, non-negotiable in **every modality the product actually
+has**. A modality the product does not have generates no obligation — it is **moot, not waived**.
+What varies between projects is their **modality surface**, never whether accessibility is a value.
+
+The obligation is per-modality, so it is met differently by different products. A persona-stratified
+app owes the visual, pointer, and language surfaces; a headless service owes its protocol, logs, and
+language. A CLI has no colour theme — high-contrast theming is moot there, and its absence is not a
+gap. **Language is a modality every project has**: identifiers, flag names, error strings,
+documentation, and UI copy are read by people, and inclusive terminology is part of the floor
+([Terminology Migration §5a](terminology-migration-doctrine.md)).
+
+A project states this in its own set in **one of three forms**:
+
+- **A ranked star** — where the modality surface makes accessibility a live tradeoff against other
+  stars (CameraConductor #1; DeckLibre #1).
+- **A stated non-negotiable floor outside the ranking** — where the surface is narrow enough that
+  ranking it would be decoration, so ranking it would fail §1.3 (LiteController, §4).
+- **A stated obligation to enable it downstream** — where the product has no human surface of its own
+  but its output determines whether a consuming surface can be accessible. A wire contract or
+  descriptor format names the product-UI stars it must **enable** (CommonTongue: *"Product-UI stars
+  the descriptor must enable: Accessibility → Ease-of-use → Speed → Choice"*).
+
+**All three are statements. Silence is none of them.** A stated set that does not account for
+accessibility across its modality surface is incomplete. **A project that does not account for it
+requires a recorded, approved exception** in its decision log — never a silent one (§1).
+
+This doctrine states the **value**; the mechanisms that satisfy it live in their own doctrines and
+are not restated here ([UI/UX §6](ui-ux-design-doctrine.md), [Visual
+Identity §6](visual-identity.md), [Language Selection](language-selection-doctrine.md), [Web
+UI §2.1](web-ui-doctrine.md)). Per §1.1 the **value** is rigid and the **means** is negotiable:
+naming any one mechanism as the value is the scope-widening failure [Decision Doctrine
+§3](decision-doctrine.md) warns against.
+
 ---
 
 ## 2. Where a project's North Stars live
@@ -158,8 +193,9 @@ ranking** — convergence/divergence by design, not copying:
 3. **Extensibility** — new models / manufacturers / transports as a first-class architectural
    concern.
 
-*(In this ranking the accessibility floor still ships — it is a family requirement — but it is not a
-driver, because this is a service, not a persona-stratified app.)*
+*(This ranking states accessibility as a **floor outside the ranking** rather than as a star — the
+second form in §1.4. The modality surface is protocol, logs, and language; there is no visual surface
+to rank, so ranking it would fail §1.3's reality test. The floor binds on the surfaces it does have.)*
 
 **What the two illustrate together:** the framework is one thing; the values are the project's own.
 CameraConductor and LiteController could not have swapped rankings without becoming worse at their
@@ -199,6 +235,9 @@ North Stars are **Lens 1 of the four-lens Prime Directives** ([Decision Doctrine
       ratified choice only (§2.1).
 - [ ] **Every star is shown forcing an outcome** — a "where it forced a decision" row per star; an
       empty row means a slogan (§1.3, §3).
+- [ ] **Accessibility is accounted for across the product's modality surface** — as a ranked star, a
+      stated floor outside the ranking, or a stated obligation to enable it downstream; silence
+      requires a recorded, approved exception (§1.4).
 - [ ] **Pinned to the decision log** — an accepted, dated decision-log entry records the set and its
       provenance (§3).
 - [ ] **One authoritative statement per project** — other mentions reference it, don't re-list it

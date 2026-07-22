@@ -150,6 +150,100 @@ shape, §3 the on-touch behaviour for `active` rows.
 
 ---
 
+### 5a. Inclusive language
+
+These rows exist because **language is a modality every project has**, and inclusive terminology is
+part of the accessibility floor — [North Stars §1.4](north-stars-doctrine.md). Sourced from
+[IETF draft-knodel-terminology-10](https://www.ietf.org/archive/id/draft-knodel-terminology-10.html)
+(reasoning categories), the [Linux kernel
+`coding-style.rst`](https://docs.kernel.org/process/coding-style.html) (the exception clause below),
+and [Google's developer style guide](https://developers.google.com/style/inclusive-documentation)
+(breadth). Cited, not adopted — none of those documents is imported wholesale.
+
+The load-bearing argument, from the IETF draft: **"Why use a metaphor when a direct description is
+both succinct and clear?"** These replacements are *descriptions*, not counter-metaphors. RFC 9309
+(robots.txt) is the proof in practice — it uses plain **allow / disallow** and never reaches for a
+colour metaphor at all.
+
+| Old | New | Category | Scope | Status | Since |
+|---|---|---|---|---|---|
+| `whitelist` | `allowlist` | racial metaphor | concept | active | 2026-07-21 |
+| `blacklist` | `denylist` (or `blocklist`) | racial metaphor | concept | active | 2026-07-21 |
+| `blackhat` / `whitehat` | `malicious` / `ethical` (actor) | racial metaphor | concept | active | 2026-07-21 |
+| `master` / `slave` | `primary`/`replica`, `controller`/`device`, `leader`/`follower`, `initiator`/`responder` — pick by **relationship**, not by rote | slavery metaphor | concept | active | 2026-07-21 |
+| `master` (branch/node, no `slave` pair) | `main` (branch), `parent`/`controller` (node) | slavery metaphor | concept | active | 2026-07-21 |
+| `man-in-the-middle` / `MITM` | `on-path attacker` | gendered | concept | active | 2026-07-21 |
+| `man-hours` / `manpower` / `manned` | `person-hours` / `staff`, `workforce` / `staffed`, `crewed` | gendered | concept | active | 2026-07-21 |
+| `manmade` | `artificial`, `manufactured`, `synthetic` | gendered | concept | active | 2026-07-21 |
+| `male` / `female` connector | `plug` / `socket` | gendered | concept | active | 2026-07-21 |
+| `guys` / `you guys` (addressing people) | `everyone`, `folks` | gendered | concept | active | 2026-07-21 |
+| `sanity check` | `validity check`, `soundness check`, `confidence check` | ableist | concept | active | 2026-07-21 |
+| `dumb down` | `simplify` | ableist | concept | active | 2026-07-21 |
+| `cripple` / `crippled` | `slow down`, `degrade`, `limit` | ableist | concept | active | 2026-07-21 |
+| `crazy` / `insane` (re: behaviour) | `baffling`, `unexpected`, `extreme` | ableist | concept | active | 2026-07-21 |
+| `lame` | name the actual flaw | ableist | concept | active | 2026-07-21 |
+| `blind to` / `turn a blind eye` | `ignore`, `unaware of`, `disregard` | ableist | concept | active | 2026-07-21 |
+| `grandfathered` | `legacy`, `pre-existing`, `exempt` | origin (racial) | concept | active | 2026-07-21 |
+| `ghetto` (re: a workaround) | `clumsy`, `inelegant`, `workaround` | racial/ethnic | concept | active | 2026-07-21 |
+| `gypsy` / `gypped` | `Romani`; `cheated`, `swindled` | ethnic slur | concept | active | 2026-07-21 |
+| `brown bag` (session) | `learning session`, `lunch and learn` | racial (segregation-era) | concept | active | 2026-07-21 |
+| `first-class citizen` | `fully supported`, `built-in` | civil-status metaphor | concept | active | 2026-07-21 |
+| `mom test` / `grandmother test` | `novice-user test`, `beginner test` | gendered + ageist | concept | active | 2026-07-21 |
+| `ninja` / `rockstar` / `guru` (re: people) | `expert`, `specialist` | cultural appropriation | concept | active | 2026-07-21 |
+| `native` / `non-native speaker` | name the actual requirement (e.g. "fluent in X") | othering | concept | active | 2026-07-21 |
+
+> **Note — violent and graphic metaphors are a preference, not a ledger row.** Prefer the direct form
+> where one is at least as precise: `kill` → *stop / end*, `nuke` → *remove / purge*, `hang` → *stop
+> responding*. **There is no on-touch obligation and no rename** — this note is deliberately not a
+> table, because §3's on-touch rule is mechanical and these are judgment calls. API and syscall names
+> (`SIGKILL`, `kill(1)`, `abort(3)`, `AbortController`) are names, not prose; the exception below
+> applies unchanged.
+>
+> **Two family terms of art are deliberately kept**: *blast radius* ([North Stars
+> §2](north-stars-doctrine.md), "widest-blast-radius edits") and *break-glass* ([Debugging
+> Doctrine](debugging-doctrine.md), emergency root access). Both are precise, load-bearing, and
+> neither is a metaphor for a person. **Renaming a working family term to satisfy an external style
+> guide is the means-over-value inversion [North Stars §1.1](north-stars-doctrine.md) warns
+> against** — the value is inclusive language, and these terms do not violate it.
+
+#### The exception clause — quoted names are preserved verbatim
+
+The strongest available precedent, and the same trap §3 already names ("never overwrite a provenance
+record"):
+
+> Exceptions for introducing new usage is to maintain a userspace ABI/API, or when updating code for
+> an existing (as of 2020) hardware or protocol specification that mandates those terms. For new
+> specifications translate specification usage of the terminology to the kernel coding standard where
+> possible.
+> — *Linux kernel, `coding-style.rst`*
+
+Stated for this family:
+
+**These rows bind terms *we* author. They do not bind a name we are quoting.** Preserved verbatim:
+
+- **Third-party API/ABI symbols, filenames, and protocol fields** — renaming another vendor's symbol
+  inside our own notes makes **our record false**.
+- **Dated quotes and provenance records** (§3, already doctrine).
+- **Wire-format and on-disk field names already shipped** — governed by [Interface
+  Stability](interface-stability-doctrine.md) and [Forward-Compatible
+  Format](forward-compatible-format-doctrine.md), cited by name per [Decision Doctrine
+  §11](decision-doctrine.md). A rename here is a **breaking change**, not a terminology fix.
+
+Where we author a *new* interface over a spec that mandates the old term, **translate at our
+boundary**: the vendor's term stays in the quoted layer, our own surface uses the direct form. For a
+family that drives third-party hardware and publishes wire contracts, this is the common case, not an
+edge case.
+
+**Surveyed 2026-07-21 — every occurrence found family-wide was exactly this exempt kind:**
+`BLACKLISTED_KEY_CONTROL_ELEMENTS` (vendored Sphinx JS in Sony's CrSDK reference) and
+`commandsBlacklist.txt` / `commandGroupsBlacklist.txt` (Logitech's own resource filenames, quoted in
+`logi-plugin-re` provenance notes). Both **stay as written**. These rows are therefore
+**forward-looking** and carry no migration backlog. *(Measurement honesty: the survey covered `.md`,
+`.swift`, `.js`, `.ts`, `.py`, `.sh`, `.json`, `.yaml`, `.yml` under `~/repositories/`, excluding
+`node_modules` and `.git` — "none in the surveyed set," not a proof of zero.)*
+
+---
+
 ## 6. Checklist
 
 - [ ] **Every rename has a ledger row here before any file is edited** — translation exists from the
@@ -165,6 +259,9 @@ shape, §3 the on-touch behaviour for `active` rows.
       useful (§3).
 - [ ] **Completion is a recorded grep** (term, paths, zero-count), then the row flips `complete`; the
       row is never deleted (§4).
+- [ ] **Inclusive-language rows (§5a) applied to terms *we* author** — and a quoted third-party
+      symbol, provenance record, or shipped wire field left verbatim under the exception clause. These
+      rows are forward-looking and stay `active`; they have no zero-count completion to reach.
 
 ---
 
