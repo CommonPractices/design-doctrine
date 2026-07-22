@@ -96,7 +96,7 @@ config, never the code.
 
 ### 5.1 `foundation.css` is consumed, never copied
 
-[`design-doctrine/assets/foundation.css`](../../../assets/foundation.css) (507 lines) already exists,
+[`CommonMind/assets/foundation.css`](../../../assets/foundation.css) (507 lines) already exists,
 is meant to be dropped into consuming projects **unchanged**, and owns colour, themes, personas, and
 the two-layer accessibility floor — verified by
 [`audit.js`](../../../assets/audit.js) and [`_verify.html`](../../../assets/_verify.html).
@@ -107,18 +107,18 @@ owns; that would be a second copy that drifts
 
 **The dependency is by identity, never by checkout path.** Per
 [Repository-Portability Doctrine](../../../repository-portability-doctrine.md), CommonStage names
-what it needs by a coordinate that resolves on any machine — never `../design-doctrine/assets/`.
+what it needs by a coordinate that resolves on any machine — never `../CommonMind/assets/`.
 
 > **Pre-existing violation to fix, noted here because this design surfaces it:**
-> `blueprints/README.md` and `CommonTongue/README.md` both link to sibling repos via `../` paths
-> (`../design-doctrine/`, `../LiteController/`). These resolve only on a machine with that exact
+> `CommonFraming/README.md` and `CommonTongue/README.md` both link to sibling repos via `../` paths
+> (`../CommonMind/`, `../LiteController/`). These resolve only on a machine with that exact
 > checkout layout and break for every off-machine consumer — including any rendered web view of
 > those READMEs. This is the exact coupling Repository-Portability forbids. It is **out of scope for
 > CommonStage** but must be fixed before those READMEs are rendered to the web.
 
-### 5.2 CommonStage versions; design-doctrine does not
+### 5.2 CommonStage versions; CommonMind does not
 
-design-doctrine states plainly: *no releases and no version numbers — these documents are always
+CommonMind states plainly: *no releases and no version numbers — these documents are always
 current by definition.* A generator that consumers pin **must** version. That asymmetry is the
 cleanest proof the two are different kinds of thing and belong in different repos.
 
@@ -141,7 +141,7 @@ must therefore state the split above as a rule, not leave it to judgement.
 ## 6. Where CommonStage lives — a fourth CommonPractices repo
 
 **Decision: a new repo, `CommonStage`, in the CommonPractices org — a fourth repo beside
-design-doctrine, blueprints, and CommonTongue.**
+CommonMind, CommonFraming, and CommonTongue.**
 
 (CommonPractices is a GitHub **Org**, not a grouping directory: it holds `.github` plus those three
 repos. The local `~/repositories/CommonPractices/` is the on-disk org mirror per
@@ -159,26 +159,26 @@ look complete is the failure §11 warns about. What the family altitude stack do
 altitude separation is itself the organizing value; that argument is made under Correctness below.
 
 **Lens 2 — Blueprints.** **No blueprint governs this shape.** Both existing blueprints are DRAFT and
-hardware/service-shaped. Per the [Blueprint Charter §5](../../../../blueprints/CHARTER.md), the
+hardware/service-shaped. Per the [Blueprint Charter §5](../../../../CommonFraming/CHARTER.md), the
 charter is deliberately anemic about domain and explicitly anticipates a different genre — so a
 *new* blueprint for a family web presence would be legitimate. But Charter §2 is absolute: **a
 blueprint ships no code you depend on.** Since the chosen scope is a full apparatus (generator,
-templates, CSS, schema), blueprints cannot be its home. A blueprint could later describe the
+templates, CSS, schema), CommonFraming cannot be its home. A blueprint could later describe the
 *shape*; it can never hold the apparatus.
 
 **Lens 3 — Best Practices.** The idiomatic answer is unambiguous: a shared theme/generator is its
 own versioned package consumed by many sites — Hugo themes, Jekyll gems, Astro integrations, Sphinx
 themes all ship this way. Nobody vendors a generator inside a prose-docs repo. This lens points at a
-separate repo, and equally hard *away* from `design-doctrine/assets/`.
+separate repo, and equally hard *away* from `CommonMind/assets/`.
 
 **Lens 4 — Correctness / SSoT.** The decisive lens. **Every existing CP repo has a written charter
 that this apparatus falsifies:**
 
 | Repo | Its charter says | CommonStage would require |
 |---|---|---|
-| blueprints | "ships no code you depend on" | shipping code you depend on |
+| CommonFraming | "ships no code you depend on" | shipping code you depend on |
 | CommonTongue | runtime wire contracts so independent *programs* interoperate | a build-time site tool — different consumers, lifecycle, failure mode |
-| design-doctrine | "no releases and no version numbers" | a versioned artifact consumers pin |
+| CommonMind | "no releases and no version numbers" | a versioned artifact consumers pin |
 
 Three charter amendments to avoid one repo is the worse trade. CommonTongue's own README sets the
 precedent for splitting on altitude rather than stretching a repo: *"this is why it is its own repo
@@ -216,12 +216,12 @@ Scope includes rendered documentation sites. Navigation generation, anchors, sea
 linking, and code highlighting are most of the engineering — far more than landing pages.
 
 **The problem:** neither TestingAutoPilot nor SurfaceWorks is the hard docs case.
-**design-doctrine is** — 33 files, ~6,900 lines, dense inter-doctrine cross-linking, and a README
+**CommonMind is** — 37 files, ~7,250 lines (2026-07-21), dense inter-doctrine cross-linking, and a README
 whose Documents table is ~35 substantial paragraphs rendered in markdown table cells. If the proving
 pair excludes a docs-heavy site, the extraction will not have proven the expensive half of the
 apparatus.
 
-**CommonPractices is itself an Org** (`.github` + design-doctrine + blueprints + CommonTongue, soon
+**CommonPractices is itself an Org** (`.github` + CommonMind + CommonFraming + CommonTongue, soon
 + CommonStage) and is therefore a **`portfolio` org — the same shape as SurfaceWorks.** This makes
 it a cheap third proving site rather than an expensive special case: it introduces no new page kind,
 only the same `portfolio` template carrying by far the family's heaviest documentation behind each
