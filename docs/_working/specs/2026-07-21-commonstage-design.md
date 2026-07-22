@@ -99,16 +99,32 @@ fields), never comments.
 
 ### 4.1 The three tiers
 
-Ordering the North Stars resolves the tension between *ease of use* (few fields) and *choice* (many
-knobs): **the required set is tiny; everything else defaults; nothing display-facing is derived from
-a namespace.**
+Ease of use (few fields) and choice (many knobs) pull in opposite directions. **They are not traded
+off against each other** — per [North Stars Doctrine §5](../../../north-stars-doctrine.md), a
+ranking says which star you may not lose, *not* which to sacrifice: *"don't trade; find the
+construction that satisfies both."*
 
-> ⚠️ **This ordering is borrowed, not ratified — see §8.5.** The tiering below was derived by
-> reasoning from the SurfaceWorks family set (Accessibility · Ease-of-use · Speed · Choice).
-> [North Stars Doctrine §2.1](../../../north-stars-doctrine.md) forbids exactly that: a product
-> "does not silently inherit an unstated" set, and naming a family set by reference is permissible
-> "only as an explicit, ratified choice." The tiering may well survive ratification unchanged, but
-> **its stated basis is not yet legitimate.**
+The three-tier shape **is** that construction, and it is the same one the doctrine cites as the
+model (CameraConductor's accessibility-vs-choice clash, resolved with a floor — total freedom above
+guarantees that cannot be overridden):
+
+- **A tiny required set** (3 fields) — ease of use fully served; a minimum viable config is three
+  lines.
+- **Unlimited optional knobs above it**, each with a working default — choice fully served; nothing
+  a reasonable org might want to vary is hardcoded.
+- **An inviolable floor beneath** (§4.2) — no config may lower the accessibility floor, whatever
+  else it sets.
+
+Neither star is sacrificed. Add: **nothing display-facing is derived from a namespace** (§4.1's
+`hostname` rule).
+
+> ⚠️ **CommonStage has no ratified North Star set — see §8.5.** The reasoning above invokes the
+> family presentation-layer ordering (Accessibility · Ease-of-use · Speed · Choice) without
+> CommonStage having stated a set of its own.
+> [§2.1](../../../north-stars-doctrine.md) forbids that: a product "does not silently inherit an
+> unstated" set, and naming a family set by reference is permissible "only as an explicit, ratified
+> choice." **The construction above stands on its own merits — a satisfy-both design needs no
+> ranking to justify it — but any claim that *the ordering* justifies it is not yet legitimate.**
 
 **Required — 3 fields.** A minimum viable config is three lines.
 
@@ -355,22 +371,48 @@ directly: a product "does not silently inherit an unstated" set, and naming a fa
 reference rather than restating the values is permissible "**only as an explicit, ratified
 choice**… never as a default to dodge the work of choosing."
 
+**The borrowed set is itself real and ratified** — verified 2026-07-21 in
+`SurfaceWorks/.github/profile/README.md`, which states *"North Stars (in order): Accessibility ·
+Ease-of-use · Speed · Choice"*, exactly where §2.1 says family stars live. So the defect is not a
+fabricated ranking; it is that **CommonStage invoked a sibling's set without stating one of its
+own** — the silent-inheritance failure, not an invented-values failure. That also makes the
+by-reference route genuinely available to CommonStage, *if* the owner ratifies it explicitly.
+
 **This is a gap, recorded rather than papered over.** The conclusions may survive ratification
 unchanged — CommonStage is a presentation-layer product and the family ordering may genuinely be
 right for it — but *"the ordering justifies the design"* is not a claim this spec is currently
 entitled to make.
 
-**What closing it requires** (per §3 of that doctrine, and owner-driven per §7 — the doctrine
-defines the framework, it does not invent any project's values):
+**What closing it requires** — the doctrine's own §6 checklist, owner-driven per §7 (the doctrine
+defines the framework; it does not invent any project's values):
 
-1. An ordered set of 3–5 values stated in CommonStage's own docs, citing the doctrine for the
-   framework.
-2. **Evidence each star is real** — where it *forced* an outcome. The §4.1 tiering and §4.2's
-   "no field may lower the accessibility floor" are both candidate evidence, if the set that ratifies
-   them is the one adopted.
-3. A dated, owner-ratified decision-log entry, so the set's provenance is greppable.
+- [ ] **3–5 ordered stars**, each with a one-line gloss, in CommonStage's own docs.
+- [ ] **The framework referenced, not re-derived** — cite the doctrine, then list CommonStage's own
+      values.
+- [ ] **No silent inheritance** — a by-reference set (e.g. "same as the family presentation layer")
+      is legitimate *only* as an explicit ratified choice, never as a default.
+- [ ] **Each star shown forcing an outcome** — an empty row means a slogan.
+- [ ] **Accessibility accounted for across CommonStage's modality surface**, in one of §1.4's three
+      forms; silence requires a recorded, approved exception.
+- [ ] **Pinned to the decision log** — accepted, dated, provenance greppable.
+- [ ] **One authoritative statement**; other mentions reference it.
 
-Until then, §4.1's ⚠️ note stands and the ordering is marked borrowed.
+**Candidate evidence already in hand** (§1.3's reality test — each is a place a value *forced* a
+design outcome, not a slogan):
+
+| Star | Where it forced something |
+|---|---|
+| Accessibility | §4.2 — no config field may lower the floor, and there is deliberately no knob to disable the contrast audit. A **floor outside the ranking** (§1.4's second form) is the likely fit: CommonStage's modality surface is the rendered page, and the mechanisms already live in `foundation.css`. |
+| Ease of use | §4.1 — the required set is 3 fields; a minimum viable config is three lines. |
+| Choice | §4.1 — every display-facing identifier that can diverge is its own field (`hostname` ≠ `org`), and `exclude`/`order`/`featured` exist so `portfolio`'s render-everything default is never a mandate. |
+
+**Note the modality surface is narrow.** CommonStage's own surface is generated HTML/CSS; it has no
+persona ladder, no pointer interaction to speak of, and no language chooser. Per §1.3, ranking
+accessibility as star #1 here may fail the reality test the way it does for LiteController — which
+is exactly why §1.4 provides the floor form. **That is a judgement for ratification, not something
+this spec should presume.**
+
+Until the set exists, §4.1's ⚠️ note stands.
 
 ---
 
