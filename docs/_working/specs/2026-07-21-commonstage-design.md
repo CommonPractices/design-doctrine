@@ -43,6 +43,82 @@ at Apache rather than BSL.
 
 ---
 
+## 1a. North Stars
+
+**Ratified by the owner, 2026-07-22.** This is CommonStage's **authoritative** statement of its own
+ordered values; other mentions in this spec point here rather than re-listing them
+([North Stars Doctrine §2](../../../north-stars-doctrine.md)).
+
+For what a North Star *is* — small, ordered, alignment near-non-negotiable while the *means* of
+alignment stays negotiable — see the [North Stars
+Doctrine](../../../north-stars-doctrine.md). That framework is **cited, not re-derived** here; what
+follows are CommonStage's own values.
+
+**These are the values of the visitor**, not of the build. CommonStage's job is the public face of
+the family's **apps** — the product page is where someone decides whether to download DeckLibre or
+AutoPilot. A technically-correct site nobody wants to use would satisfy a pipeline-shaped set
+completely; that is the failure this ordering exists to prevent.
+
+| # | Star | Gloss |
+|---|---|---|
+| 1 | **Honest status** | The page never overstates what exists or how ready it is. |
+| 2 | **Accessibility** | Every visitor can use the page, across every modality it has. |
+| 3 | **Comprehension** | A visitor learns what it does and whether it's for them, fast. |
+| 4 | **Obtainability** | The visitor can actually get it and run it. |
+| 5 | **Family coherence** | It visibly belongs with its siblings. |
+
+**Accessibility is a ranked star (§1.4's first form), not a floor.** An earlier draft proposed the
+floor form on the grounds that CommonStage's modality surface is narrow. **The owner corrected
+this:** a product page carrying screenshots, install flows, and status indicators is a materially
+richer surface than doctrine-rendering, and accessibility genuinely decides outcomes there.
+
+### 1a.1 The reality test
+
+Per [§1.3](../../../north-stars-doctrine.md), a star that has never forced an unwelcome outcome is a
+slogan. Each row names a place the value **overruled** a more convenient choice:
+
+| Star | Where it forced an outcome |
+|---|---|
+| **Honest status** | §4.4, three times: no "coming soon" placeholder; absence rendered as absence; a missing `branch` reported rather than silently substituted. It also killed the *"fail loudly, publish nothing"* proposal — which would have blocked the pre-public pattern outright — and it forbids dressing a pre-public repo as a shipping product. |
+| **Accessibility** | §4.2 — no config field may lower the floor and no knob disables the contrast audit. In §8.2 it is **actively disqualifying a candidate**: if Starlight's build inlines CSS it fails [Web UI §2](../../../web-ui-doctrine.md) and is out regardless of merit. A star that can eliminate the front-runner is not decoration. |
+| **Comprehension** | §3 — the product page carries screenshots and a real description rather than a repo name and a link. A repo listing is not a product page. |
+| **Obtainability** | Downloads and install instructions are page **content**, not a link into docs. ⚠️ **Thinnest evidence in the table** — this star mostly judges work not yet built (§8a A2 flags the product template as the untested part). Watch it. |
+| **Family coherence** | The founding requirement — *"a common look for all the web pages"* — which forced the shared-apparatus decision over per-repo sites, and which §4.5's one-build model serves. |
+
+### 1a.2 Where the ordering bites
+
+An ordering earns its keep only where it resolves a real conflict:
+
+- **Honest status ▸ Comprehension.** A page is more compelling if you omit that something is alpha.
+  Status wins — **even when it costs the download.**
+- **Accessibility ▸ Comprehension, Family coherence.** If the family look ever fails a contrast or
+  focus requirement, **the look changes.** This is the one that will actually hurt someday; ranking
+  it #2 is what makes it real.
+- **Comprehension ▸ Family coherence.** If the shared template genuinely obscures what an app does,
+  **the template bends.** Coherence is the founding requirement, not a straitjacket.
+- **Obtainability ▸ Family coherence.** Install instructions that do not fit the template win; the
+  template adapts.
+
+### 1a.3 Deliberately excluded
+
+- **Ease of authoring** and **Independence of content repos** — both real, both still true, both
+  **means rather than values** ([§1.1](../../../north-stars-doctrine.md)). They serve the visitor by
+  making a coherent family site cheap enough to maintain. They remain design rationale in §4.1 and
+  §4.5; freezing a means into a mandate is the scope-widening failure.
+- **Speed** — present in the family presentation-layer set, excluded here: build speed does not
+  discriminate at this scale (§8.2, ~37 files vs. a ~500-page threshold), so it would be a slogan.
+- **Not the family set by reference.** [§2.1](../../../north-stars-doctrine.md) permits naming a
+  family set by reference as an explicit ratified choice; it was available and **deliberately not
+  taken** — two of these five stars have no counterpart in it.
+
+> **Provenance.** An earlier draft derived stars from the *build pipeline* (Truthfulness · Ease of
+> authoring · Independence · Choice) and read as documentation values. The owner rejected it:
+> *"They are great for documentation an all, but most of the repos are (will be) apps."* The ordering
+> shape survived; the subjects did not. The error was **scope, not detail** — values derived from the
+> machinery in front of us rather than from what the product is for.
+
+---
+
 ## 2. The shape flag
 
 Each org declares its own shape as data, in a site config file in that org's `.github` repo.
@@ -133,13 +209,16 @@ guarantees that cannot be overridden):
 Neither star is sacrificed. Add: **nothing display-facing is derived from a namespace** (§4.1's
 `hostname` rule).
 
-> ⚠️ **CommonStage has no ratified North Star set — see §8.5.** The reasoning above invokes the
-> family presentation-layer ordering (Accessibility · Ease-of-use · Speed · Choice) without
-> CommonStage having stated a set of its own.
-> [§2.1](../../../north-stars-doctrine.md) forbids that: a product "does not silently inherit an
-> unstated" set, and naming a family set by reference is permissible "only as an explicit, ratified
-> choice." **The construction above stands on its own merits — a satisfy-both design needs no
-> ranking to justify it — but any claim that *the ordering* justifies it is not yet legitimate.**
+> ✅ **Resolved 2026-07-22 — CommonStage's own North Star set is ratified (§1a).** This paragraph
+> previously carried a warning: the tiering had been justified by invoking the family
+> presentation-layer ordering without CommonStage having stated a set of its own — the silent
+> inheritance [§2.1](../../../north-stars-doctrine.md) forbids.
+>
+> **The warning is void, but note what the ratified set does *not* say.** Ease of authoring is
+> **deliberately not a star** (§1a.3) — it is a *means*. So the satisfy-both construction below
+> stands on its own engineering merits, and on serving the visitor by keeping a coherent family site
+> maintainable; it is **not** justified by a ranking of ease against choice. That justification was
+> wrong twice over and is not reinstated here.
 
 **Required — 3 fields.** A minimum viable config is three lines.
 
@@ -363,17 +442,26 @@ not itself a git repository.)
 
 Run per [Decision Doctrine §11](../../../decision-doctrine.md).
 
-**Lens 1 — North Stars.** **CommonStage has no stated ordered set, so this lens cannot be run
-properly yet — stated as thin rather than manufactured**, since inventing a ranking to make the
-analysis look complete is the failure §11 warns about. The framework's home is now
-[North Stars Doctrine](../../../north-stars-doctrine.md) (formalized 2026-07-21, after this
-analysis was first written; Decision Doctrine §1 was slimmed to point at it). That doctrine's §2.1
-is why the gap cannot simply be closed by borrowing the family set — see §8.5. What the family
-altitude stack does assert is that altitude separation is itself the organizing value; that argument
-is made under Correctness below.
+**Lens 1 — North Stars.** *(Re-run 2026-07-22, once the set existed. It was previously recorded as
+thin — CommonStage had no stated ordering, and manufacturing one to make the analysis look complete
+is the failure §11 warns about. The set is now ratified in [§1a](#1a-north-stars).)*
+
+**The ratified set supports a separate repo, and the strongest support comes from the top star.**
+**Honest status** (#1) requires the site to report its own delta — rendered, unpublished, faulted
+(§4.4) — which means the apparatus must **release, version, and be verifiable**. CommonMind
+explicitly has no releases and no version numbers, so hosting a thing that must version inside a
+thing that must not is a direct clash. **Family coherence** (#5) argues the same way from the other
+end: one apparatus producing one look is the founding requirement, and it needs a single home that
+is neither a doctrine nor a wire contract. **Accessibility** (#2) is neutral on the *location*
+question — the floor holds wherever the code lives — and is stated as such rather than stretched
+into support.
 
 **Lens 2 — Blueprints.** **No blueprint governs this shape.** Both existing blueprints are DRAFT and
-hardware/service-shaped. Per the [Blueprint Charter §5](../../../../CommonFraming/CHARTER.md), the
+hardware/service-shaped. Per the **CommonFraming Blueprint Charter §5** (in the `CommonFraming`
+repo — named, not path-linked: a `../../../../` link escapes this repo and resolves only on a
+machine with this exact checkout layout, the coupling
+[Repository-Portability](../../../repository-portability-doctrine.md) §0 forbids and which §5.1
+already flags in two sibling READMEs), the
 charter is deliberately anemic about domain and explicitly anticipates a different genre — so a
 *new* blueprint for a family web presence would be legitimate. But Charter §2 is absolute: **a
 blueprint ships no code you depend on.** Since the chosen scope is a full apparatus (generator,
@@ -520,69 +608,33 @@ beacon and no client-side collector is introduced by the standard.
 What remains open is only the **deploy path** (Actions→rsync over a deploy key, a pull-based hook,
 or otherwise) — an implementation question for the plan, not a design question.
 
-### 8.5 CommonStage owes a stated ordered North Star set
+### 8.5 North Star set — RESOLVED 2026-07-22
 
-**CommonStage has no stated North Stars, and this design leaned on a borrowed set without saying
-so.** The §4.1 config tiering was derived from the SurfaceWorks family ordering (Accessibility ·
-Ease-of-use · Speed · Choice) — specifically the claim that *ease-of-use outranks choice*, which is
-what produced the tiny-required-set / everything-else-defaults shape.
+**Closed. CommonStage's own ordered set is ratified and lives in [§1a](#1a-north-stars)**, which is
+the authoritative statement per [North Stars Doctrine §2](../../../north-stars-doctrine.md).
 
-[North Stars Doctrine §2.1](../../../north-stars-doctrine.md) (formalized 2026-07-21) forbids this
-directly: a product "does not silently inherit an unstated" set, and naming a family set by
-reference rather than restating the values is permissible "**only as an explicit, ratified
-choice**… never as a default to dodge the work of choosing."
+Honest status · Accessibility · Comprehension · Obtainability · Family coherence.
 
-**The borrowed set is itself real and ratified** — verified 2026-07-21 in
-`SurfaceWorks/.github/profile/README.md`, which states *"North Stars (in order): Accessibility ·
-Ease-of-use · Speed · Choice"*, exactly where §2.1 says family stars live. So the defect is not a
-fabricated ranking; it is that **CommonStage invoked a sibling's set without stating one of its
-own** — the silent-inheritance failure, not an invented-values failure. That also makes the
-by-reference route genuinely available to CommonStage, *if* the owner ratifies it explicitly.
+**What the gap actually was.** Not invented values — the borrowed family ordering was real and
+ratified (verified 2026-07-21 in `SurfaceWorks/.github/profile/README.md`). The defect was
+**silent inheritance**: CommonStage invoked a sibling's set without stating one of its own, which
+[§2.1](../../../north-stars-doctrine.md) permits only as an explicit ratified choice. That route was
+available and **deliberately not taken** (§1a.3).
 
-**This is a gap, recorded rather than papered over — but it is a *not-yet*, not a blocker.** Per the
-owner (2026-07-21): *"All of the PDs will be satisfied. This is EARLY stage."* The set gets stated
-when the owner states it; design continues meanwhile. The conclusions may survive ratification
-unchanged — CommonStage is a presentation-layer product and the family ordering may genuinely be
-right for it — but *"the ordering justifies the design"* is not a claim this spec is currently
-entitled to make.
+**How it closed, and the error worth keeping.** A first draft derived stars from the build pipeline
+and produced documentation values for a product whose repos are **apps**. The owner rejected it;
+the ordering shape survived, the subjects did not. The owner also **promoted Accessibility from a
+floor to a ranked star**, correcting the spec's claim that CommonStage's modality surface was too
+narrow to make it decide anything. Full provenance in §1a.
 
-**What closing it requires** — the doctrine's own §6 checklist, owner-driven per §7 (the doctrine
-defines the framework; it does not invent any project's values):
+**Doctrine §6 checklist — all met:** 3–5 ordered stars with glosses in the project's own docs ·
+framework cited, not re-derived · no silent inheritance · each star shown forcing an outcome (§1a.1,
+with `Obtainability` flagged as thinnest) · accessibility accounted for as a ranked star (§1.4's
+first form) · one authoritative statement, others pointing to it.
 
-- [ ] **3–5 ordered stars**, each with a one-line gloss, in CommonStage's own docs.
-- [ ] **The framework referenced, not re-derived** — cite the doctrine, then list CommonStage's own
-      values.
-- [ ] **No silent inheritance** — a by-reference set (e.g. "same as the family presentation layer")
-      is legitimate *only* as an explicit ratified choice, never as a default.
-- [ ] **Each star shown forcing an outcome** — an empty row means a slogan.
-- [ ] **Accessibility accounted for across CommonStage's modality surface**, in one of §1.4's three
-      forms; silence requires a recorded, approved exception.
-- [ ] **Pinned to the decision log** — accepted, dated, provenance greppable.
-- [ ] **One authoritative statement**; other mentions reference it.
-
-**Candidate evidence already in hand** (§1.3's reality test — each is a place a value *forced* a
-design outcome, not a slogan):
-
-| Star | Where it forced something |
-|---|---|
-| Accessibility | §4.2 — no config field may lower the floor, and there is deliberately no knob to disable the contrast audit. A **floor outside the ranking** (§1.4's second form) is the likely fit: CommonStage's modality surface is the rendered page, and the mechanisms already live in `foundation.css`. |
-| Ease of use | §4.1 — the required set is 3 fields; a minimum viable config is three lines. |
-| Choice | §4.1 — every display-facing identifier that can diverge is its own field (`hostname` ≠ `org`), and `exclude`/`order`/`featured` exist so `portfolio`'s render-everything default is never a mandate. |
-
-**Note the modality surface is narrow.** CommonStage's own surface is generated HTML/CSS; it has no
-persona ladder, no pointer interaction to speak of, and no language chooser. Per §1.3, ranking
-accessibility as star #1 here may fail the reality test the way it does for LiteController — which
-is exactly why §1.4 provides the floor form. **That is a judgement for ratification, not something
-this spec should presume.**
-
-Until the set exists, §4.1's ⚠️ note stands.
-
-> ⭐ **Raised in priority 2026-07-22.** This was recorded as a *not-yet* rather than a blocker, per
-> the owner's *"All of the PDs will be satisfied. This is EARLY stage."* That framing stands. But
-> the §8.2 stack run came up **empty on Lens 1** — there was no ratified set to rank against — on a
-> decision that is expensive to reverse once two sites are built on it. That is the first time the
-> gap has **cost** something rather than merely being a known hole. The ordering has moved from
-> *eventually* to *before or alongside the stack pick.* **Owner's call, not the spec's.**
+⚠️ **Remaining:** the set is stated in this spec, which still lives in CommonMind's `_working/`.
+It must travel with the spec into the CommonStage repo, and be **pinned to a decision log** with
+provenance greppable — the one checklist item that cannot be completed until the repo exists.
 
 ### 8.6 Which config holds deployment-shaped facts
 

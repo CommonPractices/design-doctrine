@@ -55,6 +55,9 @@ every family Org **except ColdBoreBallistics**.
 | **Hard exclusions** | No analytics field of any kind; **no field may lower the accessibility floor** |
 | **GitHub signals** | Downloads/clones/stars ARE wanted as page **content** (≠ visitor measurement). Build-time vs client-side fetch = a plan decision |
 | **Proving pair** | **TestingAutoPilot** (`product`) + **CommonPractices** (`portfolio`) — CP carries the heaviest docs, so docs rendering is proven in phase one and CS is self-hosting |
+| **⭐ North Stars** | **RATIFIED 2026-07-22.** Authoritative statement = spec **§1a**. Ordered: **Honest status · Accessibility · Comprehension · Obtainability · Family coherence.** ⭐ **Values of the VISITOR, not the build** — CS's job is the public face of the family's **apps** |
+| **NS excluded** | Ease-of-authoring + Independence = **means, not values** (§1.1) — they stay design rationale, not rungs. **Speed** dropped (doesn't discriminate at ~37 files). Family set by reference was available and **deliberately not taken** |
+| **NS accessibility** | **Ranked star #2** (§1.4 first form), NOT a floor. Owner overruled my "narrow modality surface" claim: a product page w/ screenshots + install + status is a rich surface |
 | **Sequencing** | Build both sites concretely, **then** extract the apparatus |
 | **Build model** | **CI on the staging git host pulls** repo content + config and renders. Source repos know nothing about CS — no site config, no toolchain, no webhook. Coupling by identity. *Where CI runs = out of scope, doesn't change the design* |
 | **Trigger** | Scheduled + manual to start. Push-triggering reintroduces the coupling the pull model avoids — later, if staleness annoys |
@@ -97,10 +100,7 @@ the fourth later.
   hand. ⚠️ **Unverified + disqualifying if wrong:** whether Starlight's build leaves CSS as separate
   files rather than inlining (Web UI §2 requires editable/replaceable). **Test, don't assume.**
 - **§8.3 empty/single-repo `portfolio` org** — **not hypothetical: 2 of 7 orgs today.**
-- **§8.5 CommonStage owes a stated ordered North Star set** — ⭐ **raised in priority 2026-07-22.**
-  Still owner-driven and still a *not-yet* per the EARLY-stage framing, **but** the §8.2 run came up
-  **empty on Lens 1**, on a decision expensive to reverse once two sites exist. First time the gap
-  **cost** something. Moved from *eventually* → *before or alongside the stack pick.*
+- ~~**§8.5 North Star set**~~ — ✅ **CLOSED 2026-07-22, ratified by the owner.** See below.
 - **§8.6 (NEW) where deployment-shaped facts live** — the variant affix and `branch` are facts about
   *a deployment*, not about the org/repo identity. §4.1 split `hostname` from `org` on exactly that
   reasoning. Deliberately **not** defaulted into the identity config, to keep the placement a
@@ -140,6 +140,15 @@ the fourth later.
    (the *don't push until worthy* rule), not a transitional defect. I had also recommended "fail
    loudly, publish nothing," which would have **blocked the very pattern it must support.**
    Migration is explicitly **not our concern.**
+6. **First North Star draft was scoped to the BUILD PIPELINE — rejected.** Produced documentation
+   values (Truthfulness · Ease-of-authoring · Independence · Choice) for a product whose repos are
+   **apps**. Owner: *"They are great for documentation an all, but most of the repos are (will be)
+   apps."* Ordering shape survived; subjects did not. **Error was scope, not detail** — same class
+   as #4: reasoned from the machinery in front of me instead of what the product is *for*.
+   Owner also **promoted Accessibility floor → ranked star**, overruling my narrow-surface claim.
+7. **Escaping link `../../../../CommonFraming/CHARTER.md` — fixed.** It *resolved* locally, which is
+   exactly the trap: it only works on a machine with this checkout layout. Now **named, not linked.**
+   ⚠️ **`test -e` passing does NOT mean a link is portable** — check whether it escapes the repo.
 
 ---
 
