@@ -35,9 +35,26 @@ context boundary.
 
 ## Where we are
 
-**Design-complete. Nothing built. The CommonStage repo does not exist.**
+**Early-built. Two proving sites exist and pass; the shared apparatus is extracted; the
+config-driven generator is NOT built yet.** Repo created, public, on GitHub: `CommonPractices/CommonStage`.
 
-Spec: `CommonMind/docs/_working/specs/2026-07-21-commonstage-design.md` — **472 lines**, on `main`.
+**Spec now lives in the CommonStage repo**, not CommonMind: `CommonStage/docs/_working/specs/2026-07-21-commonstage-design.md`
+(CommonMind holds only a pointer stub). Doctrine links are identity refs (`CommonMind/<file>.md`), never `../` paths.
+
+### Built this session (all pushed)
+- `sites/testingautopilot/` — the **`product`** proving site (Zola). Real AutoPilot content.
+- `sites/commonpractices/` — the **`portfolio`** proving site: org index + 4 data-driven product pages.
+- `apparatus/` — **extracted, source of truth**: `css/stage.css` (shared structure + the F2
+  token-on-surface contract), `css/portfolio.css` (cards/badges), template partials (head, theme
+  picker + cb toggle, sync). Sites `{% include %}` these, never copy.
+- **Accessibility verified by measurement**, not asserted: every page passes the full matrix (5
+  themes × cb on/off = 10 cells, 0 failures), self-testing checker. F3 hostile-stylesheet floor test
+  PASSED as a true negative control (attack watched to land on control, then fail against the floor).
+
+### Next — the config-driven generator
+The two sites are hand-built proofs. The generator that turns a `.github` site-config into these
+pages is unbuilt. §8b F5/F6 show its shape: a template consuming per-product data. **F2 is a HARD
+requirement it must encode** — the token-on-surface contract, or accessibility rests on vigilance.
 
 CommonStage = the family's shared web presentation layer (org + product pages, rendered docs) for
 every family Org **except ColdBoreBallistics**.
